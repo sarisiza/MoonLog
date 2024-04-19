@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -58,8 +59,33 @@ dependencies {
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
 
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.5.3")
 
+    // lifecycle
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
 
+    //roomDB
+    implementation("androidx.room:room-runtime:2.5.0")
+    kapt("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.room:room-ktx:2.5.0")
+
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.2.2")
+
+    //Koin
+    implementation 'io.insert-koin:koin-androidx-compose:3.2.0'
+
+    //DataStore
+    implementation "androidx.datastore:datastore-preferences:1.1.0-alpha01"
+
+    // unit testing coroutines
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    // Window For testing
+    implementation("androidx.window:window-testing:1.0.0")
+    testImplementation "io.mockk:mockk:1.13.4"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
