@@ -1,7 +1,8 @@
 package com.upakon.moonlog
 
 import android.app.Application
-import com.upakon.moonlog.di.preferencesStoreModule
+import com.upakon.moonlog.di.dataModule
+import com.upakon.moonlog.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -20,7 +21,8 @@ class MoonLog : Application() {
             androidContext(this@MoonLog)
             //add all the modules needed
             modules(
-                preferencesStoreModule
+                dataModule,
+                viewModelModule
             )
         }
     }

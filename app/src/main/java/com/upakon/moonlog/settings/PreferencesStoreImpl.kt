@@ -30,7 +30,8 @@ class PreferencesStoreImpl(
             } ?: LocalDate.now()
             val periodDuration = preferences[PreferencesStore.PERIOD_DURATION] ?: 0
             val cycleDuration = preferences[PreferencesStore.CYCLE_DURATION] ?: 0
-            UserSettings(username, lastPeriod, periodDuration, cycleDuration)
+            val pregnant = preferences[PreferencesStore.PREGNANT] ?: false
+            UserSettings(username, lastPeriod, periodDuration, cycleDuration, pregnant)
         }
 
     override suspend fun saveSettings(settings: UserSettings) {
@@ -39,6 +40,7 @@ class PreferencesStoreImpl(
             it[PreferencesStore.LAST_PERIOD] = settings.lastPeriod.format(formatter)
             it[PreferencesStore.PERIOD_DURATION] = settings.periodDuration
             it[PreferencesStore.CYCLE_DURATION] = settings.cycleDuration
+            it[PreferencesStore.PREGNANT] = settings.pregnant
         }
     }
 

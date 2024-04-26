@@ -1,5 +1,6 @@
 package com.upakon.moonlog.settings
 
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +34,7 @@ interface PreferencesStore {
         val LAST_PERIOD = stringPreferencesKey("last_period")
         val PERIOD_DURATION = intPreferencesKey("period_duration")
         val CYCLE_DURATION = intPreferencesKey("cycle_duration")
+        val PREGNANT = booleanPreferencesKey("pregnant")
     }
 
 }
