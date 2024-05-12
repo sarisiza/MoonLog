@@ -33,7 +33,7 @@ class MoonLogViewModel(
     /**
      * Method to get the user settings from the DataStore
      */
-    fun getUserSettings(){
+    fun downloadUserSettings(){
         viewModelScope.launch(dispatcher) {
             _userSettings.value = UiState.LOADING
             try {

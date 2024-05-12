@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Moon Log</string>
+    <string name="app_name" translatable="false">Moon Log</string>
+    <string name="username">Username</string>
+    <string name="last_period">Last Period Date</string>
+    <string name="period_duration">Period Duration</string>
+    <string name="cycle_duration">Cycle Duration</string>
+    <string name="save">Save</string>
+    <string name="welcome">Welcome to Moon Log!</string>
 </resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="username">Nombre de Usuario</string>
+    <string name="last_period">Último Período</string>
+    <string name="period_duration">Duración de tu Período</string>
+    <string name="cycle_duration">Duración de tu Ciclo</string>
+    <string name="save">Guardar</string>
+    <string name="welcome">Bienvenida a Moon Log!</string>
+</resources>
