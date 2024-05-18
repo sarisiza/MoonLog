@@ -40,6 +40,7 @@ import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.settings.UserSettings
 import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -59,6 +60,9 @@ fun SettingsPage(
     var periodDuration by remember { mutableStateOf("0") }
     var cycleDuration by remember { mutableStateOf("0") }
     var showDatePicker by remember {mutableStateOf(false)}
+    val daysOfWeek = DayOfWeek.entries.toList()
+    var selectedDay = DayOfWeek.SUNDAY
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -111,7 +115,7 @@ fun SettingsPage(
                     lastPeriodString = it
                 },
                 label = { Text(text = stringResource(id = R.string.last_period))},
-                enabled = false,
+                readOnly = true,
                 singleLine = true,
                 textStyle = TextStyle(
                     fontSize = textSize.textSize
@@ -191,6 +195,22 @@ fun SettingsPage(
         }
         Spacer(modifier = Modifier.size(12.dp))
         Row {
+            Text(
+                text = stringResource(id = R.string.first_day),
+                fontSize = textSize.textSize,
+                fontWeight = FontWeight.Bold
+            )
+            MoonDropDown(
+                items = daysOfWeek,
+                textSize = textSize.textSize,
+                selected = selectedDay
+            ) {
+                selectedDay = it
+            }
+
+        }
+        Spacer(modifier = Modifier.size(12.dp))
+        Row {
             Button(
                 onClick = {
                     try {
@@ -199,6 +219,7 @@ fun SettingsPage(
                             periodDate,
                             periodDuration.toInt(),
                             cycleDuration.toInt(),
+                            firstDayOfWeek = selectedDay
                         )
                         viewModel.saveUserSettings(user)
                         navigate()

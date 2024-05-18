@@ -35,6 +35,7 @@ interface PreferencesStore {
         val PERIOD_DURATION = intPreferencesKey("period_duration")
         val CYCLE_DURATION = intPreferencesKey("cycle_duration")
         val PREGNANT = booleanPreferencesKey("pregnant")
+        val DAY_OF_WEEK = intPreferencesKey("day_of_week")
     }
 
 }
