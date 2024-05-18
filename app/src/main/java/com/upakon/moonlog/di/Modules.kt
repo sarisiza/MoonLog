@@ -4,6 +4,11 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.room.Room
+import com.upakon.moonlog.database.repository.DatabaseRepository
+import com.upakon.moonlog.database.repository.DatabaseRepositoryImpl
+import com.upakon.moonlog.database.room.DailyDatabase
+import com.upakon.moonlog.database.room.DayDao
 import com.upakon.moonlog.settings.PreferencesStore
 import com.upakon.moonlog.settings.PreferencesStoreImpl
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
@@ -30,6 +35,24 @@ val dataModule = module {
     single<PreferencesStore> {
         PreferencesStoreImpl(androidContext().dataStore)
     }
+    //database
+    single<DailyDatabase> {
+        Room.databaseBuilder(
+            androidContext(),
+            DailyDatabase::class.java,
+            "notesDatabase"
+        ).build()
+    }
+    //dao
+    single<DayDao> {
+        get<DailyDatabase>().getDao()
+    }
+    //database repository
+    single<DatabaseRepository> {
+        DatabaseRepositoryImpl(
+            get()
+        )
+    }
 }
 
 /**
@@ -39,6 +62,7 @@ val viewModelModule = module {
     viewModel {
         MoonLogViewModel(
             settingsStore = get(),
+            database = get (),
             dispatcher = Dispatchers.IO
         )
     }

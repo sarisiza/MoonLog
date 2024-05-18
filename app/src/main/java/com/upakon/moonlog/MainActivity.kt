@@ -18,7 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.upakon.moonlog.Utils.UiState
+import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.ui.screens.MoonLogScreens
 import com.upakon.moonlog.ui.screens.SettingsPage
 import com.upakon.moonlog.ui.theme.MoonLogTheme

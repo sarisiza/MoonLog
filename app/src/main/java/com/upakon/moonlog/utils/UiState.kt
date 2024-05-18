@@ -1,4 +1,4 @@
-package com.upakon.moonlog.Utils
+package com.upakon.moonlog.utils
 
 sealed class UiState<out T> {
 

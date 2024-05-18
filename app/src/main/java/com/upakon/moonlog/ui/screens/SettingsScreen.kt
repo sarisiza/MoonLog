@@ -36,6 +36,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
+import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.settings.UserSettings
 import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
@@ -51,7 +52,7 @@ fun SettingsPage(
     textSize: TextSize,
     navigate: () -> Unit
 ){
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    val formatter = DailyNote.formatter
     var username by remember{ mutableStateOf("") }
     var periodDate = LocalDate.now()
     var lastPeriodString by remember{ mutableStateOf(periodDate.format(formatter)) }
