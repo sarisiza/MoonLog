@@ -5,6 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.upakon.moonlog.calendar.CalendarRepository
+import com.upakon.moonlog.calendar.CalendarRepositoryImpl
 import com.upakon.moonlog.database.repository.DatabaseRepository
 import com.upakon.moonlog.database.repository.DatabaseRepositoryImpl
 import com.upakon.moonlog.database.room.DailyDatabase
@@ -53,6 +55,10 @@ val dataModule = module {
             get()
         )
     }
+    //calendar repository
+    single<CalendarRepository> {
+        CalendarRepositoryImpl()
+    }
 }
 
 /**
@@ -63,6 +69,7 @@ val viewModelModule = module {
         MoonLogViewModel(
             settingsStore = get(),
             database = get (),
+            calendar = get(),
             dispatcher = Dispatchers.IO
         )
     }

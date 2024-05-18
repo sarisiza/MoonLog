@@ -3,6 +3,7 @@ package com.upakon.moonlog.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.upakon.moonlog.calendar.CalendarRepository
 import com.upakon.moonlog.database.repository.DatabaseRepository
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Feeling
@@ -13,7 +14,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.lang.Thread.State
 import java.time.LocalDate
+import java.time.Month
+import java.time.Period
+import java.time.YearMonth
 
 /**
  * [MoonLogViewModel] ViewModel of the application
@@ -27,6 +32,7 @@ import java.time.LocalDate
 class MoonLogViewModel(
     private val settingsStore: PreferencesStore,
     private val database: DatabaseRepository,
+    private val calendar: CalendarRepository,
     private val dispatcher : CoroutineDispatcher
 ) : ViewModel() {
 
@@ -43,6 +49,13 @@ class MoonLogViewModel(
 
     //notes cache
     private val notesCache : MutableMap<LocalDate,DailyNote> = mutableMapOf()
+
+    private val _currentDay: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
+    val currentDay : StateFlow<LocalDate> get() = _currentDay
+
+    private val _currentMonth : MutableStateFlow<YearMonth> = MutableStateFlow(YearMonth.now())
+    val currentMonth: StateFlow<YearMonth> get() = _currentMonth
+
 
     /**
      * Method to get the user settings from the DataStore
@@ -187,5 +200,32 @@ class MoonLogViewModel(
             database.deleteFeeling(feeling)
         }
     }
+
+    /**
+     * Method to go one month ahead
+     */
+    fun oneMonthUp(){
+        val month = currentMonth.value
+        _currentMonth.value = month.plus(Period.ofMonths(1))
+    }
+
+    /**
+     * Method to go one month behind
+     */
+    fun oneMonthDown(){
+        val month = currentMonth.value
+        _currentMonth.value = month.minus(Period.ofMonths(1))
+    }
+
+    /**
+     * Method to set current day
+     *
+     * @param day New date
+     */
+    fun setDay(day: LocalDate){
+        _currentDay.value = day
+    }
+
+
 
 }
