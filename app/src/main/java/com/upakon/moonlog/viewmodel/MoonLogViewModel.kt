@@ -2,7 +2,11 @@ package com.upakon.moonlog.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.upakon.moonlog.Utils.UiState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.upakon.moonlog.database.repository.DatabaseRepository
+import com.upakon.moonlog.notes.DailyNote
+import com.upakon.moonlog.notes.Feeling
+import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.settings.PreferencesStore
 import com.upakon.moonlog.settings.UserSettings
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,6 +26,7 @@ import java.time.LocalDate
  */
 class MoonLogViewModel(
     private val settingsStore: PreferencesStore,
+    private val database: DatabaseRepository,
     private val dispatcher : CoroutineDispatcher
 ) : ViewModel() {
 
@@ -29,6 +34,15 @@ class MoonLogViewModel(
         MutableStateFlow(UiState.LOADING)
     val userSettings: StateFlow<UiState<UserSettings>> get() = _userSettings
     private var currentSettings : UserSettings? = null
+    private val _dailyNote: MutableStateFlow<UiState<DailyNote>> =
+        MutableStateFlow(UiState.LOADING)
+    val dailyNote: StateFlow<UiState<DailyNote>> get() = _dailyNote
+    private val _feelingsList : MutableStateFlow<UiState<List<Feeling>>> =
+        MutableStateFlow(UiState.LOADING)
+    val feelingsList : StateFlow<UiState<List<Feeling>>> get() = _feelingsList
+
+    //notes cache
+    private val notesCache : MutableMap<LocalDate,DailyNote> = mutableMapOf()
 
     /**
      * Method to get the user settings from the DataStore
@@ -82,7 +96,7 @@ class MoonLogViewModel(
      *
      * @param pregnant pregnancy status
      */
-    private fun updatePregnancy(pregnant: Boolean){
+    fun updatePregnancy(pregnant: Boolean){
         val newSettings = currentSettings?.let {settings ->
             UserSettings(
                 settings.username,
@@ -94,6 +108,84 @@ class MoonLogViewModel(
         } ?: UserSettings(pregnant = pregnant)
         currentSettings = newSettings
         saveUserSettings(newSettings)
+    }
+
+    /**
+     * Method to save a note to the database
+     *
+     * @param note Note to save
+     */
+    fun saveDailyNote(note: DailyNote){
+        viewModelScope.launch(dispatcher) {
+            notesCache[note.day] = note
+            database.writeNote(note)
+        }
+    }
+
+    /**
+     * Method to retrieve a note
+     *
+     * @param day Day to retrieve
+     */
+    fun getDailyNote(day: LocalDate){
+        val note = notesCache[day]
+        note?.let {
+            _dailyNote.value = UiState.SUCCESS(it)
+        } ?: run {
+            viewModelScope.launch(dispatcher) {
+                database.readNote(day).collect{
+                    if(it is UiState.SUCCESS){
+                        notesCache[day] = it.data
+                    }
+                    _dailyNote.value = it
+                }
+            }
+        }
+    }
+
+    /**
+     * Method to delete a note
+     *
+     * @param note Note to delete
+     */
+    fun deleteNote(note: DailyNote){
+        notesCache.remove(note.day)
+        viewModelScope.launch(dispatcher) {
+            database.deleteNote(note)
+        }
+    }
+
+    /**
+     * Method to add a feeling
+     *
+     * @param feeling Feeling to add
+     */
+    fun addFeeling(feeling: Feeling){
+        viewModelScope.launch(dispatcher) {
+            database.addFeeling(feeling)
+        }
+    }
+
+    /**
+     * Method to get the list of feelings
+     */
+    fun getFeelings(){
+        viewModelScope.launch(dispatcher) {
+            database.getFeelings().collect{
+                _feelingsList.value = it
+            }
+        }
+    }
+
+    /**
+     * Method to delete a feeling
+     *
+     * @param feeling Feeling to delete
+     */
+    fun deleteFeeling(feeling: Feeling){
+        viewModelScope.launch(dispatcher) {
+            database.deleteFeeling(feeling)
+        }
     }
 
 }
