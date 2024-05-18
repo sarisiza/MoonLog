@@ -7,6 +7,7 @@ import com.upakon.moonlog.notes.Feeling
 import com.upakon.moonlog.utils.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 
 class DatabaseRepositoryImpl(
@@ -21,8 +22,9 @@ class DatabaseRepositoryImpl(
         emit(UiState.LOADING)
         try {
             val dayS = day.format(DailyNote.formatter)
-            val entry = dao.readNote(dayS)?.toDailyNote() ?: DailyNote()
-            emit(UiState.SUCCESS(entry))
+            dao.readNote(dayS).map {
+                emit(UiState.SUCCESS(it?.toDailyNote() ?: DailyNote()))
+            }
         }catch (e: Exception){
             emit(UiState.ERROR(e))
         }
@@ -44,6 +46,9 @@ class DatabaseRepositoryImpl(
         try {
             val feelings = dao.getFeelings().toFeelings()
             emit(UiState.SUCCESS(feelings))
+//            dao.getFeelings().map {
+//                emit(UiState.SUCCESS(it.toFeelings()))
+//            }
         } catch (e: Exception){
             emit(UiState.ERROR(e))
         }

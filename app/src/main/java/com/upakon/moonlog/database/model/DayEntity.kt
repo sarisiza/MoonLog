@@ -13,7 +13,7 @@ data class DayEntity(
     val feeling: String?,
     val isPeriod: Boolean,
     val intercourse: Boolean,
-    val protected: Boolean,
+    val wasProtected: Boolean,
     val journal: String?
 ){
 
@@ -23,7 +23,7 @@ data class DayEntity(
             Gson().fromJson(feeling,Feeling::class.java),
             isPeriod,
             intercourse,
-            protected,
+            wasProtected,
             journal
         )
     }
