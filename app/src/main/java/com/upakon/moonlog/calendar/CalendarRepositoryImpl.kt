@@ -12,7 +12,8 @@ class CalendarRepositoryImpl : CalendarRepository {
                     "${it.dayOfMonth}"
                 } else ""
                 CalendarState.Date(
-                    dayOfMonth
+                    dayOfMonth,
+                    it.isEqual(LocalDate.now())
                 )
             }
     }

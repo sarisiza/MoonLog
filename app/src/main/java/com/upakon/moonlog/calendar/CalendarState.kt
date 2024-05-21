@@ -1,5 +1,6 @@
 package com.upakon.moonlog.calendar
 
+import java.time.LocalDate
 import java.time.YearMonth
 
 data class CalendarState(
@@ -7,7 +8,8 @@ data class CalendarState(
     val dates: List<Date>
 ) {
     data class Date(
-        val dayOfMonth : String
+        val dayOfMonth : String = "",
+        var isSelected: Boolean = false
     )
 
 }

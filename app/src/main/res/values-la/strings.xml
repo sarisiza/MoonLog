@@ -6,4 +6,5 @@
     <string name="cycle_duration">Duración de tu Ciclo</string>
     <string name="save">Guardar</string>
     <string name="welcome">Bienvenida a Moon Log!</string>
+    <string name="first_day">Primer día de la semana:</string>
 </resources>
