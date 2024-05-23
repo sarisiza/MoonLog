@@ -7,4 +7,6 @@
     <string name="save">Save</string>
     <string name="welcome">Welcome to Moon Log!</string>
     <string name="first_day">Week starts on:</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
 </resources>

@@ -3,6 +3,8 @@ package com.upakon.moonlog.calendar
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.temporal.TemporalAdjuster
+import java.time.temporal.TemporalAdjusters
 
 class CalendarRepositoryImpl : CalendarRepository {
     override fun getDates(yearMonth: YearMonth, startingDay: DayOfWeek): List<CalendarState.Date> {
@@ -20,7 +22,7 @@ class CalendarRepositoryImpl : CalendarRepository {
 
     private fun YearMonth.getDaysOfMonth(starting: DayOfWeek) : List<LocalDate>{
         val firstDay = LocalDate.of(year,month,1)
-        val firstWeekDay = firstDay.with(starting)
+        val firstWeekDay = firstDay.with(TemporalAdjusters.previous(starting))
         val firstDayOfNextMonth = firstDay.plusMonths(1)
 
         return generateSequence(firstWeekDay) { it.plusDays(1) }

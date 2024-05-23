@@ -3,7 +3,7 @@ package com.upakon.moonlog.ui.theme
 import androidx.compose.ui.graphics.Color
 
 //dark theme
-val Purple1 = Color(0xFFFACDF5)
+val Purple1 = Color(0xFFf5e4f3)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 val Purple2 = Color(0xFF6650a4)

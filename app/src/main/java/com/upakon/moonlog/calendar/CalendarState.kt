@@ -12,4 +12,15 @@ data class CalendarState(
         var isSelected: Boolean = false
     )
 
+    fun updateSelected(date: Date){
+        dates.forEach {
+            if (it == date){
+                it.isSelected = true
+            } else {
+                if (it.isSelected)
+                    it.isSelected = false
+            }
+        }
+    }
+
 }

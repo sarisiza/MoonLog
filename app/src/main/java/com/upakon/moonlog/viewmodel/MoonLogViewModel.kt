@@ -1,9 +1,10 @@
 package com.upakon.moonlog.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.upakon.moonlog.calendar.CalendarRepository
+import com.upakon.moonlog.calendar.CalendarState
 import com.upakon.moonlog.database.repository.DatabaseRepository
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Feeling
@@ -14,9 +15,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.lang.Thread.State
+import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.Month
 import java.time.Period
 import java.time.YearMonth
 
@@ -29,6 +29,8 @@ import java.time.YearMonth
  * @param settingsStore Interface to get settings from the DataStore
  * @param dispatcher Coroutine Dispatcher for background operations
  */
+
+private const val TAG = "MoonLogViewModel"
 class MoonLogViewModel(
     private val settingsStore: PreferencesStore,
     private val database: DatabaseRepository,
@@ -53,8 +55,9 @@ class MoonLogViewModel(
     private val _currentDay: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
     val currentDay : StateFlow<LocalDate> get() = _currentDay
 
-    private val _currentMonth : MutableStateFlow<YearMonth> = MutableStateFlow(YearMonth.now())
-    val currentMonth: StateFlow<YearMonth> get() = _currentMonth
+    private var currentYearMonth = YearMonth.now()
+    private val _calendarState : MutableStateFlow<UiState<CalendarState>> = MutableStateFlow(UiState.LOADING)
+    val calendarState : StateFlow<UiState<CalendarState>> get() = _calendarState
 
 
     /**
@@ -202,19 +205,19 @@ class MoonLogViewModel(
     }
 
     /**
-     * Method to go one month ahead
+     * Method to go to next month
      */
-    fun oneMonthUp(){
-        val month = currentMonth.value
-        _currentMonth.value = month.plus(Period.ofMonths(1))
+    fun nextMonth(){
+        currentYearMonth = currentYearMonth.plusMonths(1)
+        getCalendar()
     }
 
     /**
-     * Method to go one month behind
+     * Method to go to previous month
      */
-    fun oneMonthDown(){
-        val month = currentMonth.value
-        _currentMonth.value = month.minus(Period.ofMonths(1))
+    fun previousMonth(){
+        currentYearMonth = currentYearMonth.minusMonths(1)
+        getCalendar()
     }
 
     /**
@@ -222,10 +225,26 @@ class MoonLogViewModel(
      *
      * @param day New date
      */
-    fun setDay(day: LocalDate){
-        _currentDay.value = day
+    fun setDay(day: CalendarState.Date){
+        try {
+            val state = (calendarState.value as UiState.SUCCESS).data
+            state.updateSelected(day)
+            _currentDay.value = LocalDate.of(state.yearMonth.year,state.yearMonth.month,day.dayOfMonth.toInt())
+        } catch (e: Exception){
+            Log.d(TAG, "Error parsing state: ${e.localizedMessage}",e)
+        }
     }
 
-
+    fun getCalendar(){
+        _calendarState.value = UiState.LOADING
+        val state = CalendarState(
+            currentYearMonth,
+            calendar.getDates(
+                currentYearMonth,
+                currentSettings?.firstDayOfWeek ?: DayOfWeek.SUNDAY
+            )
+        )
+        _calendarState.value = UiState.SUCCESS(state)
+    }
 
 }
