@@ -14,6 +14,7 @@ import com.upakon.moonlog.settings.UserSettings
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -56,8 +57,13 @@ class MoonLogViewModel(
     val currentDay : StateFlow<LocalDate> get() = _currentDay
 
     private var currentYearMonth = YearMonth.now()
-    private val _calendarState : MutableStateFlow<UiState<CalendarState>> = MutableStateFlow(UiState.LOADING)
-    val calendarState : StateFlow<UiState<CalendarState>> get() = _calendarState
+    private val _calendarState : MutableStateFlow<CalendarState> = MutableStateFlow(
+        CalendarState(
+            currentYearMonth,
+            calendar.getDates(currentYearMonth, selected = currentDay.value)
+        )
+    )
+    val calendarState : StateFlow<CalendarState> get() = _calendarState
 
 
     /**
@@ -65,14 +71,16 @@ class MoonLogViewModel(
      */
     fun downloadUserSettings(){
         viewModelScope.launch(dispatcher) {
-            _userSettings.value = UiState.LOADING
+            _userSettings.update { UiState.LOADING }
             try {
-                settingsStore.getSettings().collect{
-                    _userSettings.value = UiState.SUCCESS(it)
-                    currentSettings = it
+                Log.d(TAG, "downloadUserSettings: downloading")
+                settingsStore.getSettings().collect{settings ->
+                    _userSettings.update { UiState.SUCCESS(settings) }
+                    currentSettings = settings
+                    getCalendar(currentDay.value)
                 }
             } catch (e: Exception){
-                _userSettings.value = UiState.ERROR(e)
+                _userSettings.update{ UiState.ERROR(e) }
             }
         }
     }
@@ -145,15 +153,19 @@ class MoonLogViewModel(
      */
     fun getDailyNote(day: LocalDate){
         val note = notesCache[day]
-        note?.let {
-            _dailyNote.value = UiState.SUCCESS(it)
+        note?.let {dNote ->
+            _dailyNote.update{
+                UiState.SUCCESS(dNote)
+            }
         } ?: run {
             viewModelScope.launch(dispatcher) {
-                database.readNote(day).collect{
-                    if(it is UiState.SUCCESS){
-                        notesCache[day] = it.data
+                database.readNote(day).collect{ note ->
+                    if(note is UiState.SUCCESS){
+                        notesCache[day] = note.data
                     }
-                    _dailyNote.value = it
+                    _dailyNote.update {
+                        note
+                    }
                 }
             }
         }
@@ -188,7 +200,7 @@ class MoonLogViewModel(
     fun getFeelings(){
         viewModelScope.launch(dispatcher) {
             database.getFeelings().collect{
-                _feelingsList.value = it
+                _feelingsList.update { it }
             }
         }
     }
@@ -209,7 +221,7 @@ class MoonLogViewModel(
      */
     fun nextMonth(){
         currentYearMonth = currentYearMonth.plusMonths(1)
-        getCalendar()
+        getCalendar(currentDay.value)
     }
 
     /**
@@ -217,7 +229,7 @@ class MoonLogViewModel(
      */
     fun previousMonth(){
         currentYearMonth = currentYearMonth.minusMonths(1)
-        getCalendar()
+        getCalendar(currentDay.value)
     }
 
     /**
@@ -227,24 +239,30 @@ class MoonLogViewModel(
      */
     fun setDay(day: CalendarState.Date){
         try {
-            val state = (calendarState.value as UiState.SUCCESS).data
-            state.updateSelected(day)
-            _currentDay.value = LocalDate.of(state.yearMonth.year,state.yearMonth.month,day.dayOfMonth.toInt())
+            val state = calendarState.value
+            _currentDay.value =
+                LocalDate.of(
+                    state.yearMonth.year,
+                    state.yearMonth.month,
+                    day.dayOfMonth.toInt()
+                )
+            getCalendar(currentDay.value)
         } catch (e: Exception){
             Log.d(TAG, "Error parsing state: ${e.localizedMessage}",e)
         }
     }
 
-    fun getCalendar(){
-        _calendarState.value = UiState.LOADING
+    private fun getCalendar(selected : LocalDate){
+        Log.d(TAG, "getCalendar: ${selected.format(DailyNote.formatter)}")
         val state = CalendarState(
             currentYearMonth,
             calendar.getDates(
                 currentYearMonth,
-                currentSettings?.firstDayOfWeek ?: DayOfWeek.SUNDAY
+                currentSettings?.firstDayOfWeek ?: DayOfWeek.SUNDAY,
+                selected
             )
         )
-        _calendarState.value = UiState.SUCCESS(state)
+        _calendarState.value =  state
     }
 
 }

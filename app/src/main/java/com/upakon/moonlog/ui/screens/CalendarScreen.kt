@@ -1,5 +1,6 @@
 package com.upakon.moonlog.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,46 +46,37 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.math.log
 
+private const val TAG = "CalendarScreen"
 @Composable
 fun CalendarScreen(
     viewModel: MoonLogViewModel,
     textSize: TextSize
 ) {
-    viewModel.getCalendar()
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        val calendarState = viewModel.calendarState.collectAsState().value
+        val calendar = viewModel.calendarState.collectAsState().value
         val currentDate = viewModel.currentDay.collectAsState().value
         val userSettings = (viewModel.userSettings.collectAsState().value as UiState.SUCCESS).data
-        var note by remember { mutableStateOf("") }
-        when(calendarState){
-            is UiState.ERROR -> {}
-            UiState.LOADING -> {
-                CircularProgressIndicator()
-            }
-            is UiState.SUCCESS -> {
-                val calendar = calendarState.data
-                MonthHeader(
-                    yearMonth = calendar.yearMonth,
-                    viewModel = viewModel,
-                    textSize = textSize
-                )
-                WeekHeader(textSize = textSize, start = userSettings.firstDayOfWeek)
-                MonthView(
-                    daysList = calendar.dates,
-                    textSize = textSize
-                ) {
-                    viewModel.setDay(it)
-                    note = "Selected date: ${currentDate.format(DailyNote.formatter)}"
-                }
-                Text(
-                    text = note,
-                    fontSize = textSize.titleSize
-                )
-            }
+        val note = "Selected date: ${currentDate.format(DailyNote.formatter)}"
+        MonthHeader(
+            yearMonth = calendar.yearMonth,
+            viewModel = viewModel,
+            textSize = textSize
+        )
+        WeekHeader(textSize = textSize, start = userSettings.firstDayOfWeek)
+        MonthView(
+            daysList = calendar.dates,
+            textSize = textSize
+        ) {
+            viewModel.setDay(it)
         }
+        Text(
+            text = note,
+            fontSize = textSize.titleSize
+        )
     }
 }
 
@@ -135,6 +127,7 @@ fun DayView(
             containerColor = if (day.dayOfMonth.isEmpty()) {
                 Color.Transparent
             } else if (day.isSelected) {
+                Log.d(TAG, "Selected: ${day.dayOfMonth}")
                 MaterialTheme.colorScheme.onPrimaryContainer
             } else {
                 MaterialTheme.colorScheme.primaryContainer
