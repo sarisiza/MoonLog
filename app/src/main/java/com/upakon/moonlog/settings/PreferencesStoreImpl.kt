@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -31,7 +32,10 @@ class PreferencesStoreImpl(
             val periodDuration = preferences[PreferencesStore.PERIOD_DURATION] ?: 0
             val cycleDuration = preferences[PreferencesStore.CYCLE_DURATION] ?: 0
             val pregnant = preferences[PreferencesStore.PREGNANT] ?: false
-            UserSettings(username, lastPeriod, periodDuration, cycleDuration, pregnant)
+            val dayOfWeek = preferences[PreferencesStore.DAY_OF_WEEK]?.let {
+                DayOfWeek.of(it)
+            } ?: DayOfWeek.SUNDAY
+            UserSettings(username, lastPeriod, periodDuration, cycleDuration, pregnant, dayOfWeek)
         }
 
     override suspend fun saveSettings(settings: UserSettings) {
@@ -41,6 +45,7 @@ class PreferencesStoreImpl(
             it[PreferencesStore.PERIOD_DURATION] = settings.periodDuration
             it[PreferencesStore.CYCLE_DURATION] = settings.cycleDuration
             it[PreferencesStore.PREGNANT] = settings.pregnant
+            it[PreferencesStore.DAY_OF_WEEK] = settings.firstDayOfWeek.value
         }
     }
 

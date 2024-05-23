@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.upakon.moonlog.ui.screens.CalendarScreen
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.ui.screens.MoonLogScreens
 import com.upakon.moonlog.ui.screens.SettingsPage
@@ -89,7 +90,10 @@ fun MoonLogNavGraph(
         }
         composable(MoonLogScreens.CALENDAR.route){
             Column {
-                Text(text = "Calendar")
+                CalendarScreen(
+                    viewModel = viewModel,
+                    textSize = textSize
+                )
             }
         }
     }
