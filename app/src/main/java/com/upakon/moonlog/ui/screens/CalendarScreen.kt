@@ -124,14 +124,7 @@ fun DayView(
             }
             .padding(4.dp),
         colors = CardColors(
-            containerColor = if (day.dayOfMonth.isEmpty()) {
-                Color.Transparent
-            } else if (day.isSelected) {
-                Log.d(TAG, "Selected: ${day.dayOfMonth}")
-                MaterialTheme.colorScheme.onPrimaryContainer
-            } else {
-                MaterialTheme.colorScheme.primaryContainer
-            },
+            containerColor = getContainerColor(day = day),
             contentColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
             disabledContentColor = Color.Transparent
@@ -221,5 +214,21 @@ fun WeekHeader(
             }
         }
     }
+}
+
+@Composable
+fun getContainerColor(
+    day: CalendarState.Date
+) : Color {
+
+    return if (day.dayOfMonth.isEmpty())
+        Color.Transparent
+    else if (day.isSelected)
+        MaterialTheme.colorScheme.onPrimaryContainer
+    else if (day.isPeriod)
+        MaterialTheme.colorScheme.surfaceContainerHigh
+    else if (day.nextPeriod)
+        MaterialTheme.colorScheme.surfaceContainerLow
+    else MaterialTheme.colorScheme.primaryContainer
 }
 

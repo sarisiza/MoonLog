@@ -43,15 +43,21 @@ class MoonLogViewModel(
         MutableStateFlow(UiState.LOADING)
     val userSettings: StateFlow<UiState<UserSettings>> get() = _userSettings
     private var currentSettings : UserSettings? = null
-    private val _dailyNote: MutableStateFlow<UiState<DailyNote>> =
+
+    val _monthlyNotes: MutableStateFlow<UiState<List<DailyNote>>> =
         MutableStateFlow(UiState.LOADING)
-    val dailyNote: StateFlow<UiState<DailyNote>> get() = _dailyNote
+    val monthlyNotes: StateFlow<UiState<List<DailyNote>>> get() = _monthlyNotes
+
     private val _feelingsList : MutableStateFlow<UiState<List<Feeling>>> =
         MutableStateFlow(UiState.LOADING)
     val feelingsList : StateFlow<UiState<List<Feeling>>> get() = _feelingsList
 
     //notes cache
-    private val notesCache : MutableMap<LocalDate,DailyNote> = mutableMapOf()
+    private val _notesState : StateFlow<MutableMap<LocalDate,DailyNote>> =
+        MutableStateFlow(
+            mutableMapOf()
+        )
+    val notesState : StateFlow<Map<LocalDate,DailyNote>> get() = _notesState
 
     private val _currentDay: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
     val currentDay : StateFlow<LocalDate> get() = _currentDay
@@ -60,7 +66,12 @@ class MoonLogViewModel(
     private val _calendarState : MutableStateFlow<CalendarState> = MutableStateFlow(
         CalendarState(
             currentYearMonth,
-            calendar.getDates(currentYearMonth, selected = currentDay.value)
+            calendar.getDates(
+                currentYearMonth,
+                selected = currentDay.value,
+                notes = notesState.value,
+                userSettings = currentSettings ?: UserSettings()
+            )
         )
     )
     val calendarState : StateFlow<CalendarState> get() = _calendarState
@@ -141,31 +152,25 @@ class MoonLogViewModel(
      */
     fun saveDailyNote(note: DailyNote){
         viewModelScope.launch(dispatcher) {
-            notesCache[note.day] = note
+            _notesState.value[note.day] = note
             database.writeNote(note)
         }
     }
 
     /**
-     * Method to retrieve a note
-     *
-     * @param day Day to retrieve
+     * Method to retrieve the notes of the month
      */
-    fun getDailyNote(day: LocalDate){
-        val note = notesCache[day]
-        note?.let {dNote ->
-            _dailyNote.update{
-                UiState.SUCCESS(dNote)
-            }
-        } ?: run {
-            viewModelScope.launch(dispatcher) {
-                database.readNote(day).collect{ note ->
-                    if(note is UiState.SUCCESS){
-                        notesCache[day] = note.data
+    fun getMonthlyNotes(){
+        viewModelScope.launch(dispatcher) {
+            database.readMonthlyNotes(currentYearMonth).collect{ notes ->
+                if(notes is UiState.SUCCESS){
+                    notes.data.map {note ->
+                        _notesState.value[note.day] = note
                     }
-                    _dailyNote.update {
-                        note
-                    }
+                    getCalendar(currentDay.value)
+                }
+                _monthlyNotes.update {
+                    notes
                 }
             }
         }
@@ -177,7 +182,7 @@ class MoonLogViewModel(
      * @param note Note to delete
      */
     fun deleteNote(note: DailyNote){
-        notesCache.remove(note.day)
+        _notesState.value.remove(note.day)
         viewModelScope.launch(dispatcher) {
             database.deleteNote(note)
         }
@@ -221,7 +226,7 @@ class MoonLogViewModel(
      */
     fun nextMonth(){
         currentYearMonth = currentYearMonth.plusMonths(1)
-        getCalendar(currentDay.value)
+        getMonthlyNotes()
     }
 
     /**
@@ -229,7 +234,7 @@ class MoonLogViewModel(
      */
     fun previousMonth(){
         currentYearMonth = currentYearMonth.minusMonths(1)
-        getCalendar(currentDay.value)
+        getMonthlyNotes()
     }
 
     /**
@@ -259,7 +264,9 @@ class MoonLogViewModel(
             calendar.getDates(
                 currentYearMonth,
                 currentSettings?.firstDayOfWeek ?: DayOfWeek.SUNDAY,
-                selected
+                selected,
+                notesState.value,
+                currentSettings ?: UserSettings()
             )
         )
         _calendarState.value =  state

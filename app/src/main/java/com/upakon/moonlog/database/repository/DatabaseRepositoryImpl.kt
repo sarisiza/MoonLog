@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
+import java.time.YearMonth
 
 class DatabaseRepositoryImpl(
     private val dao: DayDao
@@ -18,17 +19,20 @@ class DatabaseRepositoryImpl(
         dao.writeNotes(entry)
     }
 
-    override fun readNote(day: LocalDate): Flow<UiState<DailyNote>> = flow {
+    override fun readMonthlyNotes(month: YearMonth): Flow<UiState<List<DailyNote>>> = flow {
         emit(UiState.LOADING)
         try {
-            val dayS = day.format(DailyNote.formatter)
-            dao.readNote(dayS).map {
-                emit(UiState.SUCCESS(it?.toDailyNote() ?: DailyNote()))
+            val result = mutableListOf<DailyNote>()
+            for (i in 1 .. month.lengthOfMonth()){
+                val dayS = month.atDay(i).format(DailyNote.formatter)
+                dao.readNote(dayS).map {
+                    result.add(it?.toDailyNote() ?: DailyNote(month.atDay(i)))
+                }
             }
-        }catch (e: Exception){
+            emit(UiState.SUCCESS(result))
+        } catch (e: Exception){
             emit(UiState.ERROR(e))
         }
-
     }
 
     override suspend fun deleteNote(note: DailyNote) {

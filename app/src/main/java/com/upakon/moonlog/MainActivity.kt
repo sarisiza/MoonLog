@@ -89,6 +89,7 @@ fun MoonLogNavGraph(
             }
         }
         composable(MoonLogScreens.CALENDAR.route){
+            viewModel.getMonthlyNotes()
             Column {
                 CalendarScreen(
                     viewModel = viewModel,

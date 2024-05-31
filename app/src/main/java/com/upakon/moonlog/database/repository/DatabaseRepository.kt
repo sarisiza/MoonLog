@@ -5,12 +5,13 @@ import com.upakon.moonlog.notes.Feeling
 import com.upakon.moonlog.utils.UiState
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.time.YearMonth
 
 interface DatabaseRepository {
 
     suspend fun writeNote(note: DailyNote)
 
-    fun readNote(day: LocalDate) : Flow<UiState<DailyNote>>
+    fun readMonthlyNotes(month: YearMonth) : Flow<UiState<List<DailyNote>>>
 
     suspend fun deleteNote(note: DailyNote)
 
