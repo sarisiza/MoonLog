@@ -1,19 +1,17 @@
 package com.upakon.moonlog.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,7 +44,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
-import kotlin.math.log
 
 private const val TAG = "CalendarScreen"
 @Composable
@@ -57,26 +54,84 @@ fun CalendarScreen(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        val calendar = viewModel.calendarState.collectAsState().value
-        val currentDate = viewModel.currentDay.collectAsState().value
-        val userSettings = (viewModel.userSettings.collectAsState().value as UiState.SUCCESS).data
-        val note = "Selected date: ${currentDate.format(DailyNote.formatter)}"
-        MonthHeader(
-            yearMonth = calendar.yearMonth,
-            viewModel = viewModel,
-            textSize = textSize
-        )
-        WeekHeader(textSize = textSize, start = userSettings.firstDayOfWeek)
-        MonthView(
-            daysList = calendar.dates,
-            textSize = textSize
-        ) {
-            viewModel.setDay(it)
+        when(val settings = viewModel.userSettings.collectAsState().value){
+            is UiState.ERROR -> {
+                //Todo show error
+            }
+            UiState.LOADING -> {
+                CircularProgressIndicator()
+            }
+            is UiState.SUCCESS -> {
+                val nCalendar = viewModel.calendarState.collectAsState().value
+                val currentDate = viewModel.currentDay.collectAsState().value
+                val userSettings = settings.data
+                val note = "Selected date: ${currentDate.format(DailyNote.formatter)}"
+                var updatePeriod by remember {
+                    mutableStateOf(false)
+                }
+                nCalendar?.let {calendar ->
+                    MonthHeader(
+                        yearMonth = calendar.yearMonth,
+                        viewModel = viewModel,
+                        textSize = textSize
+                    )
+                    WeekHeader(textSize = textSize, start = userSettings.firstDayOfWeek!!)
+                    MonthView(
+                        daysList = calendar.dates,
+                        textSize = textSize
+                    ) {day ->
+                        if(day.isSelected){
+                            if(!currentDate.isAfter(LocalDate.now()))
+                                updatePeriod = true
+                        } else{
+                            viewModel.setDay(day)
+                        }
+                    }
+                    Text(
+                        text = note,
+                        fontSize = textSize.titleSize
+                    )
+                    if(updatePeriod){
+                        AlertDialog(
+                            title = {
+                                Text(
+                                    text = stringResource(id = R.string.update_period),
+                                    fontSize = textSize.titleSize
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.your_first_day),
+                                    fontSize = textSize.textSize
+                                )
+                            },
+                            onDismissRequest = {
+                                updatePeriod = false
+                            },
+                            confirmButton = {
+                                Button(onClick = {
+                                    viewModel.updateLatestPeriod(currentDate)
+                                    updatePeriod = false
+                                }) {
+                                    Text(
+                                        text = stringResource(id = R.string.yes),
+                                        fontSize = textSize.textSize
+                                    )
+                                }
+                            },
+                            dismissButton = {
+                                Button(onClick = { updatePeriod = false }) {
+                                    Text(
+                                        text = stringResource(id = R.string.no),
+                                        fontSize = textSize.textSize
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+            }
         }
-        Text(
-            text = note,
-            fontSize = textSize.titleSize
-        )
     }
 }
 

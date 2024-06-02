@@ -7,8 +7,11 @@ import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjuster
 import java.time.temporal.TemporalAdjusters
+import javax.xml.datatype.DatatypeConstants.DAYS
+import kotlin.time.DurationUnit
 import kotlin.time.measureTime
 
 private const val TAG = "CalendarRepositoryImpl"
@@ -46,12 +49,15 @@ class CalendarRepositoryImpl : CalendarRepository {
     }
 
     private fun LocalDate.couldBePeriod(userSettings: UserSettings) : Boolean {
+        val difference = Duration.ofDays(ChronoUnit.DAYS.between(userSettings.lastPeriod,this)).toDays()
         if(isBefore(LocalDate.now()))
             return false
-        val difference = Duration.between(userSettings.lastPeriod,this).toDays()
-        val multiple = difference/userSettings.cycleDuration
-        val firstDay = userSettings.cycleDuration*multiple
-        return (difference >= firstDay && difference < firstDay+userSettings.periodDuration)
+        if((userSettings.pregnant == true) && difference < 274){
+            return false
+        }
+        val multiple = difference/(userSettings.cycleDuration ?: 1)
+        val firstDay = (userSettings.cycleDuration ?: 1)*multiple
+        return (difference >= firstDay && difference < (firstDay+(userSettings.periodDuration ?: 1)))
     }
 
 }

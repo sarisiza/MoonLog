@@ -9,4 +9,8 @@
     <string name="first_day">Week starts on:</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
+    <string name="update_period">Update period</string>
+    <string name="your_first_day">Is your period starting today?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

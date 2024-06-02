@@ -1,6 +1,7 @@
 package com.upakon.moonlog
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -69,13 +70,14 @@ fun MoonLogNavGraph(
         composable(MoonLogScreens.SETTINGS.route){
             when(val settingsState = viewModel.userSettings.collectAsState().value){
                 is UiState.ERROR -> {
-                    Text(text = "Error")
+                    Log.e(TAG, "MoonLogNavGraph: ${settingsState.error}", settingsState.error)
+                    Text(text = "Error: ${settingsState.error.localizedMessage}")
                 }
                 UiState.LOADING -> {
                     CircularProgressIndicator()
                 }
                 is UiState.SUCCESS -> {
-                    if(settingsState.data.username.isEmpty()){
+                    if(settingsState.data.username == null){
                         SettingsPage(
                             viewModel,
                             textSize

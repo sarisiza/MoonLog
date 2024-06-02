@@ -11,9 +11,12 @@ import com.upakon.moonlog.notes.Feeling
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.settings.PreferencesStore
 import com.upakon.moonlog.settings.UserSettings
+import com.upakon.moonlog.utils.isInMonth
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -63,18 +66,10 @@ class MoonLogViewModel(
     val currentDay : StateFlow<LocalDate> get() = _currentDay
 
     private var currentYearMonth = YearMonth.now()
-    private val _calendarState : MutableStateFlow<CalendarState> = MutableStateFlow(
-        CalendarState(
-            currentYearMonth,
-            calendar.getDates(
-                currentYearMonth,
-                selected = currentDay.value,
-                notes = notesState.value,
-                userSettings = currentSettings ?: UserSettings()
-            )
-        )
+    private val _calendarState : MutableStateFlow<CalendarState?> = MutableStateFlow(
+        null
     )
-    val calendarState : StateFlow<CalendarState> get() = _calendarState
+    val calendarState : StateFlow<CalendarState?> get() = _calendarState
 
 
     /**
@@ -88,9 +83,10 @@ class MoonLogViewModel(
                 settingsStore.getSettings().collect{settings ->
                     _userSettings.update { UiState.SUCCESS(settings) }
                     currentSettings = settings
-                    getCalendar(currentDay.value)
+                    Log.d(TAG, "downloadUserSettings: ${currentSettings}")
                 }
             } catch (e: Exception){
+                Log.e(TAG, "downloadUserSettings: ${e.localizedMessage}", )
                 _userSettings.update{ UiState.ERROR(e) }
             }
         }
@@ -104,6 +100,9 @@ class MoonLogViewModel(
     fun saveUserSettings(userSettings: UserSettings){
         viewModelScope.launch(dispatcher) {
             settingsStore.saveSettings(userSettings)
+            if(userSettings.lastPeriod != null && userSettings.periodDuration != null)
+                storeNewPeriod(userSettings.lastPeriod,userSettings.periodDuration)
+            downloadUserSettings()
         }
     }
 
@@ -112,14 +111,16 @@ class MoonLogViewModel(
      *
      * @param periodDate date of the new period
      */
-    private fun updateLatestPeriod(periodDate: LocalDate){
+    fun updateLatestPeriod(periodDate: LocalDate){
+        Log.d(TAG, "updateLatestPeriod: $currentSettings")
         val newSettings = currentSettings?.let {settings ->
             UserSettings(
                 settings.username,
                 periodDate,
                 settings.periodDuration,
                 settings.cycleDuration,
-                settings.pregnant
+                settings.pregnant,
+                settings.firstDayOfWeek
             )
         } ?: UserSettings(lastPeriod = periodDate)
         currentSettings = newSettings
@@ -138,7 +139,8 @@ class MoonLogViewModel(
                 settings.lastPeriod,
                 settings.periodDuration,
                 settings.cycleDuration,
-                pregnant
+                pregnant,
+                settings.firstDayOfWeek
             )
         } ?: UserSettings(pregnant = pregnant)
         currentSettings = newSettings
@@ -154,6 +156,7 @@ class MoonLogViewModel(
         viewModelScope.launch(dispatcher) {
             _notesState.value[note.day] = note
             database.writeNote(note)
+            getMonthlyNotes()
         }
     }
 
@@ -161,17 +164,27 @@ class MoonLogViewModel(
      * Method to retrieve the notes of the month
      */
     fun getMonthlyNotes(){
+        _monthlyNotes.update { UiState.LOADING }
         viewModelScope.launch(dispatcher) {
-            database.readMonthlyNotes(currentYearMonth).collect{ notes ->
-                if(notes is UiState.SUCCESS){
-                    notes.data.map {note ->
-                        _notesState.value[note.day] = note
+            try {
+                Log.d(TAG, "getMonthlyNotes: getting notes")
+                val notesList = notesState.value.filterKeys {day ->
+                    day.isInMonth(currentYearMonth)
+                }.values.toList()
+                if(notesList.isNotEmpty()){
+                    _monthlyNotes.value = UiState.SUCCESS(notesList)
+                }else {
+                    database.readMonthlyNotes(currentYearMonth).collect { notes ->
+                        notes.map { note ->
+                            _notesState.value[note.day] = note
+                        }
+                        _monthlyNotes.value = UiState.SUCCESS(notes)
                     }
-                    getCalendar(currentDay.value)
                 }
-                _monthlyNotes.update {
-                    notes
-                }
+                getCalendar(currentDay.value)
+            } catch (e: Exception){
+                Log.e(TAG, "getMonthlyNotes: ${e.localizedMessage}", )
+                _monthlyNotes.update { UiState.ERROR(e) }
             }
         }
     }
@@ -203,9 +216,15 @@ class MoonLogViewModel(
      * Method to get the list of feelings
      */
     fun getFeelings(){
+        _feelingsList.value = UiState.LOADING
         viewModelScope.launch(dispatcher) {
-            database.getFeelings().collect{
-                _feelingsList.update { it }
+            try{
+                database.getFeelings().collect { feelings ->
+                    _feelingsList.value = UiState.SUCCESS(feelings)
+                }
+            } catch (e: Exception){
+                Log.e(TAG, "getFeelings: ${e.localizedMessage}", )
+                _feelingsList.value = UiState.ERROR(e)
             }
         }
     }
@@ -245,12 +264,14 @@ class MoonLogViewModel(
     fun setDay(day: CalendarState.Date){
         try {
             val state = calendarState.value
+            state?.let {
             _currentDay.value =
                 LocalDate.of(
-                    state.yearMonth.year,
-                    state.yearMonth.month,
+                    it.yearMonth.year,
+                    it.yearMonth.month,
                     day.dayOfMonth.toInt()
                 )
+            }
             getCalendar(currentDay.value)
         } catch (e: Exception){
             Log.d(TAG, "Error parsing state: ${e.localizedMessage}",e)
@@ -270,6 +291,25 @@ class MoonLogViewModel(
             )
         )
         _calendarState.value =  state
+    }
+
+    private suspend fun storeNewPeriod(periodStart: LocalDate, periodDuration: Int){
+        Log.d(TAG, "storeNewPeriod: storing period starting in ${periodStart.format(DailyNote.formatter)}")
+        for(day in 0 until periodDuration){
+            val currentDay = periodStart.plusDays(day.toLong())
+            val note = notesState.value[currentDay] ?: database.readNote(currentDay).first()
+            Log.d(TAG, "storeNewPeriod: ${note.day}")
+            DailyNote(
+                note.day,
+                note.feeling,
+                true,
+                note.intercourse,
+                note.protected,
+                note.journal
+            ).also {newNote ->
+                saveDailyNote(newNote)
+            }
+        }
     }
 
 }

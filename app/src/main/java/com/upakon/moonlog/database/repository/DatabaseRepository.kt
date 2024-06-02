@@ -11,13 +11,15 @@ interface DatabaseRepository {
 
     suspend fun writeNote(note: DailyNote)
 
-    fun readMonthlyNotes(month: YearMonth) : Flow<UiState<List<DailyNote>>>
+    fun readNote(day: LocalDate) : Flow<DailyNote>
+
+    fun readMonthlyNotes(month: YearMonth) : Flow<List<DailyNote>>
 
     suspend fun deleteNote(note: DailyNote)
 
     suspend fun addFeeling(feeling: Feeling)
 
-    fun getFeelings() : Flow<UiState<List<Feeling>>>
+    fun getFeelings() : Flow<List<Feeling>>
 
     suspend fun deleteFeeling(feeling: Feeling)
 
