@@ -68,7 +68,7 @@ val viewModelModule = module {
     viewModel {
         MoonLogViewModel(
             settingsStore = get(),
-            database = get (),
+            database = get(),
             calendar = get(),
             dispatcher = Dispatchers.IO
         )

@@ -19,9 +19,11 @@ private val DarkColorScheme = darkColorScheme(
     primary = Gray1,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    primaryContainer = Purple1,
-    onPrimaryContainer = Purple2,
-    onPrimary = Pink80
+    primaryContainer = Purple1, //calendar normal day
+    onPrimaryContainer = Purple2, //selected day
+    onPrimary = Pink80,
+    surfaceContainerHigh = RedBright, //period day
+    surfaceContainerLow = RedLight //possible period
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -30,7 +32,9 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Pink80,
     primaryContainer = Purple1,
     onPrimaryContainer = Purple2,
-    onPrimary = Pink80
+    onPrimary = Pink80,
+    surfaceContainerHigh = RedBright,
+    surfaceContainerLow = RedLight
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

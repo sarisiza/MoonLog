@@ -23,7 +23,7 @@ interface DayDao {
      * Method to get the notes from a day
      */
     @Query("SELECT * FROM dailyNotes WHERE day = :day")
-    fun readNote(day: String): Flow<DayEntity?>
+    fun readNote(day: String): DayEntity?
 
     @Delete
     suspend fun deleteNote(dayNotes: DayEntity)

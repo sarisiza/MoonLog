@@ -9,4 +9,8 @@
     <string name="first_day">Primer día de la semana:</string>
     <string name="back">Anterior</string>
     <string name="next">Siguiente</string>
+    <string name="update_period">Actualizar período</string>
+    <string name="your_first_day">Es tu primer día de período?</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
 </resources>

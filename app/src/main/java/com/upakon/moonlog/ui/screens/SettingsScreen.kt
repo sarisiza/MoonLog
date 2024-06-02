@@ -55,10 +55,10 @@ fun SettingsPage(
 ){
     val formatter = DailyNote.formatter
     var username by remember{ mutableStateOf("") }
-    var periodDate = LocalDate.now()
+    var periodDate by remember { mutableStateOf(LocalDate.now()) }
     var lastPeriodString by remember{ mutableStateOf(periodDate.format(formatter)) }
-    var periodDuration by remember { mutableStateOf("0") }
-    var cycleDuration by remember { mutableStateOf("0") }
+    var periodDuration by remember { mutableStateOf("") }
+    var cycleDuration by remember { mutableStateOf("") }
     var showDatePicker by remember {mutableStateOf(false)}
     val daysOfWeek = DayOfWeek.entries.toList()
     var selectedDay = DayOfWeek.SUNDAY

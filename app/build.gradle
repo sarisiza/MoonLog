@@ -90,7 +90,7 @@ dependencies {
     implementation "io.insert-koin:koin-android:$koin_version"
 
     //DataStore
-    implementation "androidx.datastore:datastore-preferences:1.1.0-alpha01"
+    implementation "androidx.datastore:datastore-preferences:1.1.1"
 
     // unit testing coroutines
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'

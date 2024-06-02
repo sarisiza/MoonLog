@@ -11,7 +11,9 @@ data class CalendarState(
 ) {
     data class Date(
         val dayOfMonth : String = "",
-        var isSelected: Boolean = false
+        var isSelected: Boolean = false,
+        var isPeriod: Boolean = false,
+        var nextPeriod: Boolean = false
     )
 
 }

@@ -25,27 +25,27 @@ class PreferencesStoreImpl(
 
     override fun getSettings(): Flow<UserSettings> =
         dataStore.data.map {preferences ->
-            val username = preferences[PreferencesStore.USERNAME] ?: ""
+            val username = preferences[PreferencesStore.USERNAME]
             val lastPeriod = preferences[PreferencesStore.LAST_PERIOD]?.let {date ->
                 LocalDate.parse(date, formatter)
-            } ?: LocalDate.now()
-            val periodDuration = preferences[PreferencesStore.PERIOD_DURATION] ?: 0
-            val cycleDuration = preferences[PreferencesStore.CYCLE_DURATION] ?: 0
-            val pregnant = preferences[PreferencesStore.PREGNANT] ?: false
+            }
+            val periodDuration = preferences[PreferencesStore.PERIOD_DURATION]
+            val cycleDuration = preferences[PreferencesStore.CYCLE_DURATION]
+            val pregnant = preferences[PreferencesStore.PREGNANT]
             val dayOfWeek = preferences[PreferencesStore.DAY_OF_WEEK]?.let {
                 DayOfWeek.of(it)
-            } ?: DayOfWeek.SUNDAY
+            }
             UserSettings(username, lastPeriod, periodDuration, cycleDuration, pregnant, dayOfWeek)
         }
 
     override suspend fun saveSettings(settings: UserSettings) {
         dataStore.edit {
-            it[PreferencesStore.USERNAME] = settings.username
-            it[PreferencesStore.LAST_PERIOD] = settings.lastPeriod.format(formatter)
-            it[PreferencesStore.PERIOD_DURATION] = settings.periodDuration
-            it[PreferencesStore.CYCLE_DURATION] = settings.cycleDuration
-            it[PreferencesStore.PREGNANT] = settings.pregnant
-            it[PreferencesStore.DAY_OF_WEEK] = settings.firstDayOfWeek.value
+            it[PreferencesStore.USERNAME] = settings.username!!
+            it[PreferencesStore.LAST_PERIOD] = settings.lastPeriod!!.format(formatter)
+            it[PreferencesStore.PERIOD_DURATION] = settings.periodDuration!!
+            it[PreferencesStore.CYCLE_DURATION] = settings.cycleDuration!!
+            it[PreferencesStore.PREGNANT] = false //todo change when ready
+            it[PreferencesStore.DAY_OF_WEEK] = settings.firstDayOfWeek!!.value
         }
     }
 

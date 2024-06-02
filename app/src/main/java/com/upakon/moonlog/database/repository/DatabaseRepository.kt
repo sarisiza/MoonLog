@@ -5,18 +5,21 @@ import com.upakon.moonlog.notes.Feeling
 import com.upakon.moonlog.utils.UiState
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.time.YearMonth
 
 interface DatabaseRepository {
 
     suspend fun writeNote(note: DailyNote)
 
-    fun readNote(day: LocalDate) : Flow<UiState<DailyNote>>
+    fun readNote(day: LocalDate) : Flow<DailyNote>
+
+    fun readMonthlyNotes(month: YearMonth) : Flow<List<DailyNote>>
 
     suspend fun deleteNote(note: DailyNote)
 
     suspend fun addFeeling(feeling: Feeling)
 
-    fun getFeelings() : Flow<UiState<List<Feeling>>>
+    fun getFeelings() : Flow<List<Feeling>>
 
     suspend fun deleteFeeling(feeling: Feeling)
 

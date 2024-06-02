@@ -33,3 +33,7 @@ fun List<DayOfWeek>.sortByFirst(firstDay : DayOfWeek) : List<DayOfWeek>{
     result.addAll(subList(0,indexOf(firstDay)))
     return result
 }
+
+fun LocalDate.isInMonth(yearMonth: YearMonth) : Boolean{
+    return month == yearMonth.month && year == yearMonth.year
+}
