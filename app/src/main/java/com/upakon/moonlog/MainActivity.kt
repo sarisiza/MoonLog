@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,12 +30,16 @@ import com.upakon.moonlog.ui.theme.MoonLogTheme
 import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import org.koin.androidx.compose.viewModel
+import java.util.Locale
 
 private const val TAG = "MainActivity"
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(Locale.getDefault().language)
+        )
         setContent {
             MoonLogTheme {
                 // A surface container using the 'background' color from the theme

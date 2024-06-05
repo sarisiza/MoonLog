@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="username">Nombre de Usuario</string>
+    <string name="last_period">Último Período</string>
+    <string name="period_duration">Duración de tu Período</string>
+    <string name="cycle_duration">Duración de tu Ciclo</string>
+    <string name="save">Guardar</string>
+    <string name="welcome">Bienvenida a Moon Log!</string>
+    <string name="first_day">Primer día de la semana:</string>
+    <string name="back">Anterior</string>
+    <string name="next">Siguiente</string>
+    <string name="update_period">Actualizar período</string>
+    <string name="your_first_day">Es tu primer día de período?</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+</resources>
