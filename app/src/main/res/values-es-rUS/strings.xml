@@ -13,4 +13,10 @@
     <string name="your_first_day">Es tu primer día de período?</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="welcome_short">Bienvenida,</string>
+    <string name="today_is">Hoy es:</string>
+    <string name="days_until">Días para el \n
+        siguiente período</string>
+    <string name="days_late">Días de retraso</string>
+    <string name="start_period">Iniciar período!</string>
 </resources>

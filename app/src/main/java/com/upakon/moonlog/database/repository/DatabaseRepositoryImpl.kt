@@ -5,14 +5,10 @@ import com.upakon.moonlog.database.model.toFeelings
 import com.upakon.moonlog.database.room.DayDao
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Feeling
-import com.upakon.moonlog.utils.UiState
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.YearMonth
-import kotlin.math.log
 
 private const val TAG = "DatabaseRepositoryImpl"
 class DatabaseRepositoryImpl(
@@ -31,7 +27,7 @@ class DatabaseRepositoryImpl(
     override fun readNote(day: LocalDate): Flow<DailyNote> = flow {
         try {
             Log.d(TAG, "readNote: reading notes")
-            val dayS = day.format(DailyNote.formatter)
+            val dayS = day.format(DailyNote.shortFormat)
             emit(dao.readNote(dayS)?.toDailyNote() ?: DailyNote(day))
         } catch (e: Exception){
             Log.e(TAG, "readNote: ${e.localizedMessage}", e)
@@ -44,7 +40,7 @@ class DatabaseRepositoryImpl(
             Log.d(TAG, "readMonthlyNotes: reading notes")
             val result = mutableListOf<DailyNote>()
             for (i in 1 .. month.lengthOfMonth()){
-                val dayS = month.atDay(i).format(DailyNote.formatter)
+                val dayS = month.atDay(i).format(DailyNote.shortFormat)
                 Log.d(TAG, "readMonthlyNotes: $dayS")
                 result.add(dao.readNote(dayS)?.toDailyNote() ?: DailyNote(month.atDay(i)))
             }

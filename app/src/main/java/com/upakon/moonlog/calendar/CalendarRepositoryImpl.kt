@@ -8,11 +8,7 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalAdjuster
 import java.time.temporal.TemporalAdjusters
-import javax.xml.datatype.DatatypeConstants.DAYS
-import kotlin.time.DurationUnit
-import kotlin.time.measureTime
 
 private const val TAG = "CalendarRepositoryImpl"
 class CalendarRepositoryImpl : CalendarRepository {
@@ -23,7 +19,7 @@ class CalendarRepositoryImpl : CalendarRepository {
         notes : Map<LocalDate,DailyNote>,
         userSettings: UserSettings
     ): List<CalendarState.Date> {
-        Log.d(TAG, "getDates - selected: ${selected.format(DailyNote.formatter)}")
+        Log.d(TAG, "getDates - selected: ${selected.format(DailyNote.shortFormat)}")
         return yearMonth.getDaysOfMonth(startingDay)
             .map {date ->
                 val dayOfMonth = if(date.monthValue == yearMonth.monthValue){

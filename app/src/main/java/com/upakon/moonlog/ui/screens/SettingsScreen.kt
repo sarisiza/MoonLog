@@ -1,7 +1,6 @@
 package com.upakon.moonlog.ui.screens
 
 import android.util.Log
-import android.widget.DatePicker
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,13 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,8 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,7 +40,6 @@ import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 private const val TAG = "SettingsScreen"
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +50,7 @@ fun SettingsPage(
     textSize: TextSize,
     navigate: () -> Unit
 ){
-    val formatter = DailyNote.formatter
+    val formatter = DailyNote.shortFormat
     var username by remember{ mutableStateOf("") }
     var periodDate by remember { mutableStateOf(LocalDate.now()) }
     var lastPeriodString by remember{ mutableStateOf(periodDate.format(formatter)) }
@@ -123,7 +120,7 @@ fun SettingsPage(
                 trailingIcon = {
                     IconButton(onClick = { showDatePicker = true }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.baseline_calendar_month_24),
+                            Icons.Default.DateRange,
                             contentDescription = null
                         )
                     }
