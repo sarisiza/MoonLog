@@ -13,4 +13,10 @@
     <string name="your_first_day">Is your period starting today?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="welcome_short">Welcome,</string>
+    <string name="today_is">Today is:</string>
+    <string name="days_until">Days until \n
+        next period</string>
+    <string name="days_late">Days late</string>
+    <string name="start_period">Start Period!</string>
 </resources>

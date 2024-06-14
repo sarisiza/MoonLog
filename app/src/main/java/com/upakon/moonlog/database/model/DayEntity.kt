@@ -19,7 +19,7 @@ data class DayEntity(
 
     fun toDailyNote(): DailyNote{
         return DailyNote(
-            LocalDate.parse(day,DailyNote.formatter),
+            LocalDate.parse(day,DailyNote.shortFormat),
             Gson().fromJson(feeling,Feeling::class.java),
             isPeriod,
             intercourse,

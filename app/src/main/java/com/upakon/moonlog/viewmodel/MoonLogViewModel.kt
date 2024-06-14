@@ -13,16 +13,16 @@ import com.upakon.moonlog.settings.PreferencesStore
 import com.upakon.moonlog.settings.UserSettings
 import com.upakon.moonlog.utils.isInMonth
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
+import java.time.Duration
 import java.time.LocalDate
-import java.time.Period
 import java.time.YearMonth
+import java.time.temporal.ChronoUnit
 
 /**
  * [MoonLogViewModel] ViewModel of the application
@@ -278,8 +278,14 @@ class MoonLogViewModel(
         }
     }
 
+    fun getDaysUntilNextPeriod(day : LocalDate) : Int {
+        return currentSettings?.let {settings ->
+            (settings.cycleDuration ?: 28) - (Duration.ofDays(ChronoUnit.DAYS.between(settings.lastPeriod,LocalDate.now())).toDays().toInt())
+        } ?: 0
+    }
+
     private fun getCalendar(selected : LocalDate){
-        Log.d(TAG, "getCalendar: ${selected.format(DailyNote.formatter)}")
+        Log.d(TAG, "getCalendar: ${selected.format(DailyNote.shortFormat)}")
         val state = CalendarState(
             currentYearMonth,
             calendar.getDates(
@@ -294,7 +300,7 @@ class MoonLogViewModel(
     }
 
     private suspend fun storeNewPeriod(periodStart: LocalDate, periodDuration: Int){
-        Log.d(TAG, "storeNewPeriod: storing period starting in ${periodStart.format(DailyNote.formatter)}")
+        Log.d(TAG, "storeNewPeriod: storing period starting in ${periodStart.format(DailyNote.shortFormat)}")
         for(day in 0 until periodDuration){
             val currentDay = periodStart.plusDays(day.toLong())
             val note = notesState.value[currentDay] ?: database.readNote(currentDay).first()

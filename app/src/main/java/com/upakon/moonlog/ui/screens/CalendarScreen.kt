@@ -65,7 +65,7 @@ fun CalendarScreen(
                 val nCalendar = viewModel.calendarState.collectAsState().value
                 val currentDate = viewModel.currentDay.collectAsState().value
                 val userSettings = settings.data
-                val note = "Selected date: ${currentDate.format(DailyNote.formatter)}"
+                val note = "Selected date: ${currentDate.format(DailyNote.shortFormat)}"
                 var updatePeriod by remember {
                     mutableStateOf(false)
                 }

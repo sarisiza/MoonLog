@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.upakon.moonlog.database.model.DayEntity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 data class DailyNote(
     val day: LocalDate = LocalDate.now(),
@@ -16,7 +17,7 @@ data class DailyNote(
 
     fun toDatabase(): DayEntity{
         return DayEntity(
-            day.format(formatter),
+            day.format(shortFormat),
             Gson().toJson(feeling),
             isPeriod,
             intercourse,
@@ -26,7 +27,8 @@ data class DailyNote(
     }
 
     companion object{
-        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val shortFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val longFormat: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
     }
 
 }
