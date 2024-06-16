@@ -309,8 +309,7 @@ class MoonLogViewModel(
                 note.day,
                 note.feeling,
                 true,
-                note.intercourse,
-                note.protected,
+                note.notes,
                 note.journal
             ).also {newNote ->
                 saveDailyNote(newNote)

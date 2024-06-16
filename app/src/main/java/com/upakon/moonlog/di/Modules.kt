@@ -11,6 +11,7 @@ import com.upakon.moonlog.database.repository.DatabaseRepository
 import com.upakon.moonlog.database.repository.DatabaseRepositoryImpl
 import com.upakon.moonlog.database.room.DailyDatabase
 import com.upakon.moonlog.database.room.DayDao
+import com.upakon.moonlog.database.room.MIGRATION_1_2
 import com.upakon.moonlog.settings.PreferencesStore
 import com.upakon.moonlog.settings.PreferencesStoreImpl
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
@@ -43,7 +44,9 @@ val dataModule = module {
             androidContext(),
             DailyDatabase::class.java,
             "notesDatabase"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
     //dao
     single<DayDao> {

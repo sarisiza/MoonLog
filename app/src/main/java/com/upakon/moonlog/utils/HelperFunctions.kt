@@ -1,5 +1,12 @@
 package com.upakon.moonlog.utils
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonObject
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
@@ -36,4 +43,27 @@ fun List<DayOfWeek>.sortByFirst(firstDay : DayOfWeek) : List<DayOfWeek>{
 
 fun LocalDate.isInMonth(yearMonth: YearMonth) : Boolean{
     return month == yearMonth.month && year == yearMonth.year
+}
+
+fun JsonElement.parseJsonToMap() : MutableMap<String,Any>{
+    val result = jsonObject.mapValues {
+        when(val info = it.value){
+            JsonNull -> {
+                "null"
+            }
+            is JsonObject -> {
+                info.parseJsonToMap()
+            }
+            is JsonArray -> {
+                info.forEach { element ->
+                    element.parseJsonToMap()
+                }
+            }
+            is JsonPrimitive -> {
+                val converter = PrimitiveConverter(info)
+                converter.convertPrimitive()
+            }
+        }
+    }
+    return result.toMutableMap()
 }

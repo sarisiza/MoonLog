@@ -10,8 +10,7 @@ data class DailyNote(
     val day: LocalDate = LocalDate.now(),
     val feeling: Feeling? = null,
     val isPeriod: Boolean = false,
-    val intercourse: Boolean = false,
-    val protected: Boolean = false,
+    val notes : MutableMap<String,Any> = mutableMapOf(),
     val journal: String? = null
 ){
 
@@ -20,8 +19,7 @@ data class DailyNote(
             day.format(shortFormat),
             Gson().toJson(feeling),
             isPeriod,
-            intercourse,
-            protected,
+            Gson().toJson(notes),
             journal
         )
     }
