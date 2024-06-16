@@ -25,7 +25,7 @@ data class DayEntity(
             LocalDate.parse(day,DailyNote.shortFormat),
             Gson().fromJson(feeling,Feeling::class.java),
             isPeriod,
-            Json.encodeToJsonElement(notes).parseJsonToMap(),
+            Json.parseToJsonElement(notes).parseJsonToMap(),
             journal
         )
     }
