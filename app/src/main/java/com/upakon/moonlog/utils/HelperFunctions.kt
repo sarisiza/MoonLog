@@ -1,6 +1,5 @@
 package com.upakon.moonlog.utils
 
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
@@ -55,7 +54,7 @@ fun JsonElement.parseJsonToMap() : MutableMap<String,Any>{
                 info.parseJsonToMap()
             }
             is JsonArray -> {
-                info.forEach { element ->
+                info.map { element ->
                     element.parseJsonToMap()
                 }
             }
