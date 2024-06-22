@@ -172,9 +172,7 @@ fun MoonLogNavGraph(
             //todo get trackers
             ProfileScreen(
                 viewModel = viewModel,
-                textSize = textSize,
-                onMoodsClick = { /*TODO*/ },
-                onTrackersClick = { /*TODO*/})
+                textSize = textSize)
         }
     }
 }
