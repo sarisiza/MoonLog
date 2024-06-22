@@ -24,4 +24,6 @@
     <string name="low">Low</string>
     <string name="i_feel">I\'m feeling:</string>
     <string name="journal">Journal</string>
+    <string name="my_moods">My Moods</string>
+    <string name="my_trackers">My Trackers</string>
 </resources>

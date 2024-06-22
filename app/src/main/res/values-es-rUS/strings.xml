@@ -24,4 +24,6 @@
     <string name="low">Baja</string>
     <string name="i_feel">Me siento:</string>
     <string name="journal">Diario</string>
+    <string name="my_moods">Mis Estados de Ánimo</string>
+    <string name="my_trackers">Mis Registros</string>
 </resources>
