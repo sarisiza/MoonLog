@@ -49,10 +49,14 @@ private const val TAG = "CalendarScreen"
 @Composable
 fun CalendarScreen(
     viewModel: MoonLogViewModel,
-    textSize: TextSize
+    textSize: TextSize,
+    trackerEntry: () -> Unit,
+    journalEntry: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
     ) {
         when(val settings = viewModel.userSettings.collectAsState().value){
             is UiState.ERROR -> {
@@ -87,9 +91,11 @@ fun CalendarScreen(
                             viewModel.setDay(day)
                         }
                     }
-                    Text(
-                        text = note,
-                        fontSize = textSize.titleSize
+                    NotesView(
+                        viewModel = viewModel,
+                        textSize = textSize,
+                        trackerEntry = trackerEntry,
+                        journalEntry = journalEntry
                     )
                     if(updatePeriod){
                         AlertDialog(
