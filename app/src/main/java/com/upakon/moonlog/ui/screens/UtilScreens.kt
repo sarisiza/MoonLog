@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
 import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.utils.toLocalDate
+import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
@@ -120,6 +121,14 @@ fun <T>getItemText(item: T): String {
         is DayOfWeek -> item.getDisplayName(TextStyle.FULL, Locale.getDefault())
         else -> item.toString()
     }
+}
+
+@Composable
+fun getDaysUntilText(daysUntil : Int) : String {
+    return if(daysUntil >= 0)
+        stringResource(id = R.string.days_until)
+    else
+        stringResource(id = R.string.days_late)
 }
 
 

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -125,7 +126,13 @@ fun MoonLogNavGraph(
         composable(MoonLogScreens.HOME.route){
             HomePage(
                 viewModel = viewModel,
-                textSize = textSize
+                textSize = textSize,
+                trackerEntry = {
+                    navController.navigate(MoonLogScreens.NOTES.route)
+                },
+                journalEntry = {
+                    navController.navigate(MoonLogScreens.ENTRY.route)
+                }
             )
         }
         composable(MoonLogScreens.CALENDAR.route){
@@ -133,8 +140,26 @@ fun MoonLogNavGraph(
             Column {
                 CalendarScreen(
                     viewModel = viewModel,
-                    textSize = textSize
+                    textSize = textSize,
+                    trackerEntry = {
+                        navController.navigate(MoonLogScreens.NOTES.route)
+                    },
+                    journalEntry = {
+                        navController.navigate(MoonLogScreens.ENTRY.route)
+                    }
                 )
+            }
+        }
+        composable(MoonLogScreens.NOTES.route){
+            Text(text = "Trackers")
+            Button(onClick = { navController.popBackStack() }) {
+                Text(text = "Back")
+            }
+        }
+        composable(MoonLogScreens.ENTRY.route){
+            Text(text = "Journal Entry")
+            Button(onClick = { navController.popBackStack() }) {
+                Text(text = "Back")
             }
         }
     }

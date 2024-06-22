@@ -15,8 +15,13 @@
     <string name="no">No</string>
     <string name="welcome_short">Welcome,</string>
     <string name="today_is">Today is:</string>
-    <string name="days_until">Days until \n
-        next period</string>
+    <string name="days_until">Days until next period</string>
     <string name="days_late">Days late</string>
     <string name="start_period">Start Period!</string>
+    <string name="day">Day</string>
+    <string name="pregnant_chances">Pregnant chances:</string>
+    <string name="high">High</string>
+    <string name="low">Low</string>
+    <string name="i_feel">I\'m feeling:</string>
+    <string name="journal">Journal</string>
 </resources>

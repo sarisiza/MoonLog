@@ -45,7 +45,8 @@ class MoonLogViewModel(
     private val _userSettings: MutableStateFlow<UiState<UserSettings>> =
         MutableStateFlow(UiState.LOADING)
     val userSettings: StateFlow<UiState<UserSettings>> get() = _userSettings
-    private var currentSettings : UserSettings? = null
+    var currentSettings : UserSettings? = null
+        private set
 
     val _monthlyNotes: MutableStateFlow<UiState<List<DailyNote>>> =
         MutableStateFlow(UiState.LOADING)
@@ -280,8 +281,18 @@ class MoonLogViewModel(
 
     fun getDaysUntilNextPeriod(day : LocalDate) : Int {
         return currentSettings?.let {settings ->
-            (settings.cycleDuration ?: 28) - (Duration.ofDays(ChronoUnit.DAYS.between(settings.lastPeriod,LocalDate.now())).toDays().toInt())
+            (settings.cycleDuration ?: 28) - getDaysFromPeriod(day)
         } ?: 0
+    }
+
+    fun getDaysFromPeriod(day: LocalDate) : Int {
+        return currentSettings?.let {settings ->
+            Duration.ofDays(ChronoUnit.DAYS.between(settings.lastPeriod,day)).toDays().toInt()
+        } ?: 0
+    }
+
+    fun calculatePregnantChance(daysFrom : Int) : Boolean {
+        return daysFrom in 12..16
     }
 
     private fun getCalendar(selected : LocalDate){

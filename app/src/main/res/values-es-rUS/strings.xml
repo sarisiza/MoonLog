@@ -15,8 +15,13 @@
     <string name="no">No</string>
     <string name="welcome_short">Bienvenida,</string>
     <string name="today_is">Hoy es:</string>
-    <string name="days_until">Días para el \n
-        siguiente período</string>
+    <string name="days_until">Días para el siguiente período</string>
     <string name="days_late">Días de retraso</string>
     <string name="start_period">Iniciar período!</string>
+    <string name="day">Día</string>
+    <string name="pregnant_chances">Probabilidad de embarazo:</string>
+    <string name="high">Alta</string>
+    <string name="low">Baja</string>
+    <string name="i_feel">Me siento:</string>
+    <string name="journal">Diario</string>
 </resources>
