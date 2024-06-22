@@ -36,6 +36,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.upakon.moonlog.ui.screens.CalendarScreen
 import com.upakon.moonlog.ui.screens.HomePage
+import com.upakon.moonlog.ui.screens.JournalEntryScreen
 import com.upakon.moonlog.ui.screens.MenuItems
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.ui.screens.MoonLogScreens
@@ -124,6 +125,8 @@ fun MoonLogNavGraph(
             }
         }
         composable(MoonLogScreens.HOME.route){
+            viewModel.getMonthlyNotes()
+            viewModel.goToToday()
             HomePage(
                 viewModel = viewModel,
                 textSize = textSize,
@@ -136,7 +139,6 @@ fun MoonLogNavGraph(
             )
         }
         composable(MoonLogScreens.CALENDAR.route){
-            viewModel.getMonthlyNotes()
             Column {
                 CalendarScreen(
                     viewModel = viewModel,
@@ -157,9 +159,11 @@ fun MoonLogNavGraph(
             }
         }
         composable(MoonLogScreens.ENTRY.route){
-            Text(text = "Journal Entry")
-            Button(onClick = { navController.popBackStack() }) {
-                Text(text = "Back")
+            JournalEntryScreen(
+                viewModel = viewModel,
+                textSize = textSize
+            ) {
+                navController.popBackStack()
             }
         }
     }

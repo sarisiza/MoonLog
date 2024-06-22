@@ -279,6 +279,10 @@ class MoonLogViewModel(
         }
     }
 
+    fun goToToday(){
+        _currentDay.value = LocalDate.now()
+    }
+
     fun getDaysUntilNextPeriod(day : LocalDate) : Int {
         return currentSettings?.let {settings ->
             (settings.cycleDuration ?: 28) - getDaysFromPeriod(day)
