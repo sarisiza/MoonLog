@@ -55,6 +55,7 @@ class MoonLogViewModel(
     private val _feelingsList : MutableStateFlow<UiState<List<Feeling>>> =
         MutableStateFlow(UiState.LOADING)
     val feelingsList : StateFlow<UiState<List<Feeling>>> get() = _feelingsList
+    private val feelingsCache : StateFlow<MutableList<Feeling>> = MutableStateFlow(mutableListOf())
 
     //notes cache
     private val _notesState : StateFlow<MutableMap<LocalDate,DailyNote>> =
@@ -209,6 +210,7 @@ class MoonLogViewModel(
      */
     fun addFeeling(feeling: Feeling){
         viewModelScope.launch(dispatcher) {
+            feelingsCache.value.add(feeling)
             database.addFeeling(feeling)
         }
     }
@@ -220,8 +222,14 @@ class MoonLogViewModel(
         _feelingsList.value = UiState.LOADING
         viewModelScope.launch(dispatcher) {
             try{
-                database.getFeelings().collect { feelings ->
-                    _feelingsList.value = UiState.SUCCESS(feelings)
+                if (feelingsCache.value.isNotEmpty()){
+                    _feelingsList.value = UiState.SUCCESS(feelingsCache.value)
+                } else {
+                    database.getFeelings().collect { feelings ->
+                        feelingsCache.value.clear()
+                        feelingsCache.value.addAll(feelings)
+                        _feelingsList.value = UiState.SUCCESS(feelings)
+                    }
                 }
             } catch (e: Exception){
                 Log.e(TAG, "getFeelings: ${e.localizedMessage}", )

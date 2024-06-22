@@ -40,6 +40,7 @@ import com.upakon.moonlog.ui.screens.JournalEntryScreen
 import com.upakon.moonlog.ui.screens.MenuItems
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.ui.screens.MoonLogScreens
+import com.upakon.moonlog.ui.screens.ProfileScreen
 import com.upakon.moonlog.ui.screens.SettingsPage
 import com.upakon.moonlog.ui.theme.MoonLogTheme
 import com.upakon.moonlog.ui.theme.TextSize
@@ -165,6 +166,13 @@ fun MoonLogNavGraph(
             ) {
                 navController.popBackStack()
             }
+        }
+        composable(MoonLogScreens.PROFILE.route){
+            viewModel.getFeelings()
+            //todo get trackers
+            ProfileScreen(
+                viewModel = viewModel,
+                textSize = textSize)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.upakon.moonlog.utils
 
+import com.upakon.moonlog.notes.Feeling
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
@@ -66,3 +67,5 @@ fun JsonElement.parseJsonToMap() : MutableMap<String,Any>{
     }
     return result.toMutableMap()
 }
+
+fun List<Any>.getNextId() : Int = this.size + 1

@@ -5,5 +5,6 @@ enum class MoonLogScreens(val route: String) {
     CALENDAR("calendar"),
     NOTES("notes"),
     ENTRY("entry"),
-    HOME("home")
+    HOME("home"),
+    PROFILE("profile")
 }

@@ -24,4 +24,9 @@
     <string name="low">Low</string>
     <string name="i_feel">I\'m feeling:</string>
     <string name="journal">Journal</string>
+    <string name="my_moods">My Moods</string>
+    <string name="my_trackers">My Trackers</string>
+    <string name="add_mood">Add Mood</string>
+    <string name="add_tracker">Add Tracker</string>
+    <string name="missing_info">* Some information is missing</string>
 </resources>
