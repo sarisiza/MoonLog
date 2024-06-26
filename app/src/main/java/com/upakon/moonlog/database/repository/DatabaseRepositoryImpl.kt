@@ -1,10 +1,13 @@
 package com.upakon.moonlog.database.repository
 
 import android.util.Log
+import com.upakon.moonlog.database.model.toDatabase
 import com.upakon.moonlog.database.model.toFeelings
 import com.upakon.moonlog.database.room.DayDao
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Feeling
+import com.upakon.moonlog.notes.Tracker
+import com.upakon.moonlog.notes.toTrackers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
@@ -74,5 +77,22 @@ class DatabaseRepositoryImpl(
     override suspend fun deleteFeeling(feeling: Feeling){
         val feelDb = feeling.toDatabase()
         dao.deleteFeeling(feelDb)
+    }
+
+    override fun getTrackers(): Flow<List<Tracker>> = flow{
+        try {
+            val trackers = dao.getTrackers().toTrackers()
+            emit(trackers)
+        } catch (e: Exception){
+            throw e
+        }
+    }
+
+    override suspend fun addTracker(tracker: Tracker) {
+        dao.addTracker(tracker.toDatabase())
+    }
+
+    override suspend fun deleteTracker(tracker: Tracker) {
+        dao.deleteTracker(tracker.toDatabase())
     }
 }
