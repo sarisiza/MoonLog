@@ -1,5 +1,7 @@
 package com.upakon.moonlog.utils
 
+import com.google.gson.Gson
+import com.upakon.moonlog.notes.Tracker
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -42,6 +44,36 @@ class HelperFunctionsKtTest{
         assertEquals(tracking[0]["value"] as Double,68.5,0.0)
         assertEquals(tracking[1]["value"] as Int,3)
 
+    }
+
+    @Test
+    fun `test json conversion from tracker map`(){
+        val weightTracker = Tracker("weight","kg")
+        val waterTracker = Tracker("water","glasses")
+        val trackMap = mapOf(weightTracker to 67.1, waterTracker to 1.0)
+        val bigMap = mapOf("trackers" to trackMap)
+        val gson = Gson()
+        val json = gson.toJson(bigMap)
+        val expectedJson = "\"{" +
+                "\"trackers\":[" +
+                "{" +
+                "\"tracker\":{" +
+                "\"name\":\"weight\"," +
+                "\"unit\":\"kg\"" +
+                "}," +
+                "\"value\":67.1" +
+                "}," +
+                "{" +
+                "\"tracker\":{" +
+                "\"name\":\"water\"," +
+                "\"unit\":\"glasses\"" +
+                "}," +
+                "\"value\":1.0" +
+                "}" +
+                "]" +
+                "}\""
+        val jsonMap = Json.parseToJsonElement(json).parseJsonToMap()
+        val expectedMap = mapOf("trackers" to mapOf(weightTracker to 67.1, waterTracker to 1.0))
     }
 
 }

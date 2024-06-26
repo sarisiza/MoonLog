@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.upakon.moonlog.database.model.DayEntity
 import com.upakon.moonlog.database.model.FeelingEntity
+import com.upakon.moonlog.database.model.TrackerEntity
 import com.upakon.moonlog.notes.Feeling
 import kotlinx.coroutines.flow.Flow
 
@@ -45,5 +46,17 @@ interface DayDao {
      */
     @Delete
     suspend fun deleteFeeling(feeling: FeelingEntity)
+
+    /**
+     * Method to add a new tracker
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addTracker(trackerEntity: TrackerEntity)
+
+    @Query("SELECT * FROM trackers")
+    suspend fun getTrackers(): List<TrackerEntity>
+
+    @Delete
+    suspend fun deleteTracker(trackerEntity: TrackerEntity)
 
 }

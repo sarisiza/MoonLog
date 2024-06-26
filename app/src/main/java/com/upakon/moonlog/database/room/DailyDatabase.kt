@@ -7,13 +7,15 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.upakon.moonlog.database.model.DayEntity
 import com.upakon.moonlog.database.model.FeelingEntity
+import com.upakon.moonlog.database.model.TrackerEntity
 
 @Database(
     entities = [
         DayEntity::class,
-        FeelingEntity::class
+        FeelingEntity::class,
+        TrackerEntity::class
    ],
-    version = 2,
+    version = 3,
     exportSchema = false,
 )
 abstract class DailyDatabase : RoomDatabase() {
@@ -26,4 +28,11 @@ val MIGRATION_1_2 = object : Migration(1,2) {
         db.execSQL("ALTER TABLE dailyNotes DROP COLUMN intercourse")
         db.execSQL("ALTER TABLE dailyNotes DROP COLUMN wasProtected")
     }
+}
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ADD TABLE trackers")
+    }
+
 }

@@ -31,6 +31,7 @@ import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
+import java.time.Month
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -119,6 +120,7 @@ fun <T>MoonDropDown(
 fun <T>getItemText(item: T): String {
     return when(item){
         is DayOfWeek -> item.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        is String -> item
         else -> item.toString()
     }
 }
