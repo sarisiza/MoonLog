@@ -27,6 +27,8 @@
     <string name="my_moods">Mis Estados de Ánimo</string>
     <string name="my_trackers">Mis Registros</string>
     <string name="add_mood">Agregar Estado de Ánimo</string>
-    <string name="add_tracker">Agregar Registro</string>
+    <string name="add_tracker">Agregar Seguimiento</string>
     <string name="missing_info">* No tengo información suficiente</string>
+    <string name="tracker_name">Quiero dar seguimiento a:</string>
+    <string name="unit_name">Medido en:</string>
 </resources>

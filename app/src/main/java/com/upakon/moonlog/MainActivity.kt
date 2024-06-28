@@ -169,7 +169,7 @@ fun MoonLogNavGraph(
         }
         composable(MoonLogScreens.PROFILE.route){
             viewModel.getFeelings()
-            //todo get trackers
+            viewModel.getTrackers()
             ProfileScreen(
                 viewModel = viewModel,
                 textSize = textSize)

@@ -29,4 +29,6 @@
     <string name="add_mood">Add Mood</string>
     <string name="add_tracker">Add Tracker</string>
     <string name="missing_info">* Some information is missing</string>
+    <string name="tracker_name">"I want to track: "</string>
+    <string name="unit_name">That is measured in:</string>
 </resources>

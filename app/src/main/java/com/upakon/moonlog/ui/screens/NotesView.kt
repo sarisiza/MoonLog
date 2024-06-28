@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
+import com.upakon.moonlog.notes.Tracker
 import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 
@@ -99,13 +101,23 @@ fun NotesView(
                         note?.feeling?.let {
                             item {
                                 Text(
-                                    text = "${stringResource(id = R.string.i_feel)} ${it.name}",
+                                    text = "${stringResource(id = R.string.i_feel)} ${it.emoji} ${it.name}",
                                     fontSize = textSize.titleSize,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
                         }
-                        //todo trackers
+                        note?.notes?.get("trackers")?.let { trackMap ->
+                            val trackers = (trackMap as MutableMap<Tracker,Double>).map { track ->
+                                "${track.key.name}: ${track.value} ${track.key.unit}"
+                            }
+                            items(trackers){
+                                Text(
+                                    text = it,
+                                    fontSize = textSize.textSize
+                                )
+                            }
+                        }
                     }
                 }
             }
