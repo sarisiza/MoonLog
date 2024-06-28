@@ -8,6 +8,7 @@ import com.upakon.moonlog.calendar.CalendarState
 import com.upakon.moonlog.database.repository.DatabaseRepository
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Feeling
+import com.upakon.moonlog.notes.Tracker
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.settings.PreferencesStore
 import com.upakon.moonlog.settings.UserSettings
@@ -56,6 +57,11 @@ class MoonLogViewModel(
         MutableStateFlow(UiState.LOADING)
     val feelingsList : StateFlow<UiState<List<Feeling>>> get() = _feelingsList
     private val feelingsCache : StateFlow<MutableList<Feeling>> = MutableStateFlow(mutableListOf())
+
+    private val _trackersList : MutableStateFlow<UiState<List<Tracker>>> =
+        MutableStateFlow(UiState.LOADING)
+    val trackersList : StateFlow<UiState<List<Tracker>>> get() = _trackersList
+    private val trackersCache : StateFlow<MutableList<Tracker>> = MutableStateFlow(mutableListOf())
 
     //notes cache
     private val _notesState : StateFlow<MutableMap<LocalDate,DailyNote>> =
@@ -226,7 +232,6 @@ class MoonLogViewModel(
                     _feelingsList.value = UiState.SUCCESS(feelingsCache.value)
                 } else {
                     database.getFeelings().collect { feelings ->
-                        feelingsCache.value.clear()
                         feelingsCache.value.addAll(feelings)
                         _feelingsList.value = UiState.SUCCESS(feelings)
                     }
@@ -245,7 +250,51 @@ class MoonLogViewModel(
      */
     fun deleteFeeling(feeling: Feeling){
         viewModelScope.launch(dispatcher) {
+            feelingsCache.value.remove(feeling)
             database.deleteFeeling(feeling)
+        }
+    }
+
+    /**
+     * Method to add a tracker
+     *
+     * @param tracker Tracker to add
+     */
+    fun addTracker(tracker: Tracker){
+        viewModelScope.launch(dispatcher) {
+            trackersCache.value.add(tracker)
+            database.addTracker(tracker)
+        }
+    }
+
+    fun getTrackers(){
+        viewModelScope.launch(dispatcher) {
+            try {
+                _trackersList.value = UiState.LOADING
+                if(trackersCache.value.isNotEmpty()){
+                    _trackersList.value = UiState.SUCCESS(trackersCache.value)
+                } else {
+                    database.getTrackers().collect{
+                        trackersCache.value.addAll(it)
+                        _trackersList.value = UiState.SUCCESS(it)
+                    }
+                }
+            } catch (e: Exception){
+                Log.e(TAG, "getTrackers: ${e.localizedMessage}",e)
+                _trackersList.value = UiState.ERROR(e)
+            }
+        }
+    }
+
+    /**
+     * Method to add a tracker
+     *
+     * @param tracker Tracker to add
+     */
+    fun deleteTracker(tracker: Tracker){
+        viewModelScope.launch(dispatcher) {
+            trackersCache.value.remove(tracker)
+            database.deleteTracker(tracker)
         }
     }
 

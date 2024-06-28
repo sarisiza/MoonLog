@@ -131,6 +131,7 @@ fun ProfileScreen(
                     .fillMaxHeight()
                     .fillMaxWidth()
             ) {
+                val trackersState = viewModel.trackersList.collectAsState().value
                 Text(
                     text = stringResource(id = R.string.my_trackers),
                     fontSize = textSize.titleSize
@@ -138,10 +139,25 @@ fun ProfileScreen(
                 LazyColumn(
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    //todo trackers list
+                    when (trackersState) {
+                        is UiState.ERROR -> TODO()
+                        UiState.LOADING -> {
+                            item {
+                                CircularProgressIndicator()
+                            }
+                        }
+                        is UiState.SUCCESS -> {
+                            items(trackersState.data){
+                                Text(
+                                    text = "- ${it.name}",
+                                    fontSize = textSize.textSize
+                                )
+                            }
+                        }
+                    }
                 }
                 IconButton(
-                    onClick = { showTrackerEditor = false },
+                    onClick = { showTrackerEditor = true },
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
@@ -169,120 +185,18 @@ fun ProfileScreen(
                 }
             }
             if(showTrackerEditor){
-
+                TrackerEditor(
+                    textSize = textSize,
+                    onDismiss = { showTrackerEditor = false }
+                ) {
+                    viewModel.addTracker(it)
+                    viewModel.getTrackers()
+                    showTrackerEditor = false
+                }
             }
         } ?: run {
             //todo handle null user
             //shouldn't get here, but just in case
         }
-    }
-}
-
-@Composable
-fun MoodEditor(
-    id : Int,
-    textSize: TextSize,
-    onDismiss: () -> Unit,
-    onSave: (Feeling) -> Unit
-) {
-    var emoji by remember {
-        mutableStateOf("\uD83D\uDE03")
-    }
-    var name by remember {
-        mutableStateOf("")
-    }
-    var showEmojiPicker by remember {
-        mutableStateOf(false)
-    }
-    var error by remember {
-        mutableStateOf(false)
-    }
-    AlertDialog(
-        onDismissRequest = { onDismiss() },
-        confirmButton = {
-            Button(
-                onClick = {
-                    if(emoji.isNotEmpty() && name.isNotEmpty()){
-                        val feeling = Feeling(
-                            id,
-                            name,
-                            emoji
-                        )
-                        onSave(feeling)
-                    } else {
-                        error = true
-                    }
-                }
-            ) {
-                Text(
-                    text = stringResource(R.string.save),
-                    fontSize = textSize.textSize
-                )
-            }
-        },
-        title = {
-            Text(
-                text = stringResource(id = R.string.add_mood)
-            )
-        },
-        text = {
-            Column {
-                Row {
-                    Button(
-                        onClick = { showEmojiPicker = true }
-                    ) {
-                        Text(
-                            text = emoji
-                        )
-                    }
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = {name = it},
-                        textStyle = TextStyle(
-                            fontSize = textSize.textSize
-                        )
-                    )
-                }
-                if(error){
-                    Text(
-                        text = stringResource(id = R.string.missing_info),
-                        fontSize = textSize.textSize,
-                        color = Color.Red
-                    )
-                }
-            }
-        }
-    )
-    if(showEmojiPicker) {
-        EmojiPickerDialog(
-            onDismiss = { showEmojiPicker = false }
-        ) {
-            emoji = it
-            showEmojiPicker = false
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EmojiPickerDialog(
-    onDismiss: () -> Unit,
-    onSelected : (String) -> Unit
-){
-    BasicAlertDialog(
-        onDismissRequest = { onDismiss() }
-    ) {
-        var searchText by remember {
-            mutableStateOf("")
-        }
-        ComposeEmojiPickerBottomSheetUI(
-            onEmojiClick = {
-                onSelected(it.character)
-            },
-            searchText = searchText,
-            updateSearchText = {
-                searchText = it
-            }
-        )
     }
 }

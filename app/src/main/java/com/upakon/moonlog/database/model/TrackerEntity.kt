@@ -7,7 +7,7 @@ import com.upakon.moonlog.notes.Tracker
 
 @Entity(tableName = "trackers")
 data class TrackerEntity(
-    @PrimaryKey val name: String,
+    @PrimaryKey val name: String = "",
     val unit: String
 )
 
