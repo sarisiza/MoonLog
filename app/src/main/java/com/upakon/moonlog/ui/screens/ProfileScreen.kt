@@ -149,7 +149,7 @@ fun ProfileScreen(
                         is UiState.SUCCESS -> {
                             items(trackersState.data){
                                 Text(
-                                    text = "- ${it.name}",
+                                    text = "${stringResource(id = R.string.bullet)} ${it.name}",
                                     fontSize = textSize.textSize
                                 )
                             }

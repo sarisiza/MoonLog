@@ -75,9 +75,8 @@ fun <T>MoonDropDown(
     onSelected: (T) -> Unit
 ){
     var expanded by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    var selectedItem by remember { mutableStateOf(selected?:items[0]) }
-    var selectedText by remember { mutableStateOf(getItemText(selected)) }
+    var selectedItem by remember { mutableStateOf(selected ?: items[0]) }
+    var selectedText by remember { mutableStateOf(getItemText(selectedItem)) }
     Box(
         modifier = Modifier
             .padding(20.dp)
@@ -301,6 +300,7 @@ fun TrackerEditor(
 fun <T>getItemText(item: T): String {
     return when(item){
         is DayOfWeek -> item.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        is Feeling -> "${item.emoji} ${item.name}"
         is String -> item
         else -> item.toString()
     }

@@ -31,4 +31,5 @@
     <string name="missing_info">* Some information is missing</string>
     <string name="tracker_name">"I want to track: "</string>
     <string name="unit_name">That is measured in:</string>
+    <string name="bullet" translatable="false">•</string>
 </resources>
