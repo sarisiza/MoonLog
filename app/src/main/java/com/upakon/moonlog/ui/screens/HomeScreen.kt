@@ -34,9 +34,7 @@ import kotlin.math.abs
 @Composable
 fun HomePage(
     viewModel: MoonLogViewModel,
-    textSize: TextSize,
-    trackerEntry: () -> Unit,
-    journalEntry: () -> Unit
+    textSize: TextSize
 ){
     Column(
         modifier = Modifier
@@ -132,9 +130,7 @@ fun HomePage(
                 }
                 NotesView(
                     viewModel = viewModel,
-                    textSize = textSize,
-                    trackerEntry = trackerEntry,
-                    journalEntry = journalEntry
+                    textSize = textSize
                 )
                 if(showDatePicker){
                     PickDate(onDismiss = { showDatePicker = false }) { date ->

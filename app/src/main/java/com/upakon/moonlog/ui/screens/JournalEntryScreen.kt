@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -23,63 +24,60 @@ import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
+import java.time.LocalDate
 
 @Composable
 fun JournalEntryScreen(
-    viewModel: MoonLogViewModel,
+    note: DailyNote?,
     textSize: TextSize,
-    onClick: () -> Unit
+    onDismiss: () -> Unit,
+    onClick: (String) -> Unit
 ){
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(5.dp)
-    ) {
-        val date = viewModel.currentDay.collectAsState().value
-        val currentNote = viewModel.notesState.collectAsState().value[date]
-        val currentEntry = currentNote?.journal
-        var journalEntry by remember {
-            mutableStateOf(currentEntry ?: "")
-        }
-        Text(
-            text = date.format(DailyNote.longFormat),
-            fontSize = textSize.headerSize,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-                .padding(5.dp)
-        )
-        OutlinedTextField(
-            value = journalEntry,
-            onValueChange = {
-                journalEntry = it
-            },
-            textStyle = TextStyle(
-                fontSize = textSize.textSize
-            ),
-            modifier = Modifier
-                .height(500.dp)
-                .fillMaxWidth()
-        )
-        Button(
-            onClick = {
-                val newNote = currentNote?.let {
-                    DailyNote(
-                        it.day,
-                        it.feeling,
-                        it.isPeriod,
-                        it.notes,
-                        journalEntry
-                    )
-                } ?: DailyNote(
-                    day = date,
-                    journal = journalEntry
-                )
-                viewModel.saveDailyNote(newNote)
-                onClick()
-            },
-            modifier = Modifier.align(Alignment.End)
-        ) {
-            Text(text = stringResource(id = R.string.save))
-        }
+    val currentEntry = note?.journal
+    var journalEntry by remember {
+        mutableStateOf(currentEntry ?: "")
     }
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onClick(journalEntry)
+                }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.save),
+                    fontSize = textSize.titleSize
+                )
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+            ) {
+                Text(
+                    text = note?.day?.format(DailyNote.longFormat) ?: LocalDate.now().format(DailyNote.longFormat),
+                    fontSize = textSize.headerSize,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                )
+                OutlinedTextField(
+                    value = journalEntry,
+                    onValueChange = {
+                        journalEntry = it
+                    },
+                    textStyle = TextStyle(
+                        fontSize = textSize.textSize
+                    ),
+                    modifier = Modifier
+                        .height(500.dp)
+                        .fillMaxWidth()
+                )
+            }
+        }
+    )
 }

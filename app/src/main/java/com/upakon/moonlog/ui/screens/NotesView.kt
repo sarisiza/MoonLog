@@ -1,11 +1,14 @@
 package com.upakon.moonlog.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +18,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -24,20 +31,27 @@ import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Tracker
 import com.upakon.moonlog.ui.theme.TextSize
+import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 
+private const val TAG = "NotesView"
 @Composable
 fun NotesView(
     viewModel: MoonLogViewModel,
-    textSize: TextSize,
-    trackerEntry: () -> Unit,
-    journalEntry: () -> Unit
+    textSize: TextSize
 ) {
     val day = viewModel.currentDay.collectAsState().value
+    val note = viewModel.notesState.collectAsState().value[day]
+    var showNotesEdit by remember {
+        mutableStateOf(false)
+    }
+    var showJournalEntry by remember {
+        mutableStateOf(false)
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        val note = viewModel.notesState.collectAsState().value[day]
         Row {
             Column(
                 modifier = Modifier.weight(1F)
@@ -87,7 +101,7 @@ fun NotesView(
                         .padding(4.dp)
                         .fillMaxWidth()
                         .fillMaxHeight()
-                        .clickable { trackerEntry() },
+                        .clickable { showNotesEdit = true },
                     border = BorderStroke(
                         width = 1.dp,
                         color = Color.Black
@@ -102,18 +116,22 @@ fun NotesView(
                             item {
                                 Text(
                                     text = "${stringResource(id = R.string.i_feel)} ${it.emoji} ${it.name}",
-                                    fontSize = textSize.titleSize,
+                                    fontSize = textSize.textSize,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
                         }
+                        item {
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
                         note?.notes?.get("trackers")?.let { trackMap ->
+                            Log.d(TAG, "NotesView: ${trackMap}")
                             val trackers = (trackMap as MutableMap<Tracker,Double>).map { track ->
                                 "${track.key.name}: ${track.value} ${track.key.unit}"
                             }
                             items(trackers){
                                 Text(
-                                    text = it,
+                                    text = "${stringResource(id = R.string.bullet)} $it",
                                     fontSize = textSize.textSize
                                 )
                             }
@@ -126,7 +144,7 @@ fun NotesView(
                     .fillMaxHeight()
                     .weight(1F)
                     .padding(4.dp)
-                    .clickable { journalEntry() },
+                    .clickable { showJournalEntry = true },
                 border = BorderStroke(
                     width = 1.dp,
                     color = Color.Black
@@ -151,6 +169,44 @@ fun NotesView(
                     }
                 }
             }
+        }
+    }
+    if(showNotesEdit){
+        val feelingsState = viewModel.feelingsList.collectAsState().value
+        val trackersState = viewModel.trackersList.collectAsState().value
+        if (feelingsState is UiState.SUCCESS && trackersState is UiState.SUCCESS){
+            NotesEntryScreen(
+                note = note,
+                feelings = feelingsState.data,
+                trackers = trackersState.data,
+                textSize = textSize,
+                onDismiss = { showNotesEdit = false }
+            ){
+                viewModel.saveDailyNote(it)
+                showNotesEdit = false
+            }
+        }
+    }
+    if(showJournalEntry){
+        JournalEntryScreen(
+            note = note,
+            textSize = textSize,
+            onDismiss = { showJournalEntry = false }
+        ) {entry ->
+            val newNote = note?.let { dailyNote ->
+                 DailyNote(
+                    dailyNote.day,
+                    dailyNote.feeling,
+                    dailyNote.isPeriod,
+                    dailyNote.notes,
+                    entry
+                )
+            } ?: DailyNote(
+                day,
+                journal = entry
+            )
+            viewModel.saveDailyNote(newNote)
+            showJournalEntry = false
         }
     }
 }

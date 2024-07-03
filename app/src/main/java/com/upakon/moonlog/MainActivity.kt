@@ -117,6 +117,7 @@ fun MoonLogNavGraph(
                             viewModel,
                             textSize
                         ){
+                            viewModel.downloadUserSettings()
                             navController.navigate(MoonLogScreens.HOME.route)
                         }
                     } else{
@@ -128,48 +129,22 @@ fun MoonLogNavGraph(
         composable(MoonLogScreens.HOME.route){
             viewModel.getMonthlyNotes()
             viewModel.goToToday()
+            viewModel.getFeelings()
+            viewModel.getTrackers()
             HomePage(
                 viewModel = viewModel,
-                textSize = textSize,
-                trackerEntry = {
-                    navController.navigate(MoonLogScreens.NOTES.route)
-                },
-                journalEntry = {
-                    navController.navigate(MoonLogScreens.ENTRY.route)
-                }
+                textSize = textSize
             )
         }
         composable(MoonLogScreens.CALENDAR.route){
             Column {
                 CalendarScreen(
                     viewModel = viewModel,
-                    textSize = textSize,
-                    trackerEntry = {
-                        navController.navigate(MoonLogScreens.NOTES.route)
-                    },
-                    journalEntry = {
-                        navController.navigate(MoonLogScreens.ENTRY.route)
-                    }
+                    textSize = textSize
                 )
             }
         }
-        composable(MoonLogScreens.NOTES.route){
-            Text(text = "Trackers")
-            Button(onClick = { navController.popBackStack() }) {
-                Text(text = "Back")
-            }
-        }
-        composable(MoonLogScreens.ENTRY.route){
-            JournalEntryScreen(
-                viewModel = viewModel,
-                textSize = textSize
-            ) {
-                navController.popBackStack()
-            }
-        }
         composable(MoonLogScreens.PROFILE.route){
-            viewModel.getFeelings()
-            viewModel.getTrackers()
             ProfileScreen(
                 viewModel = viewModel,
                 textSize = textSize)
