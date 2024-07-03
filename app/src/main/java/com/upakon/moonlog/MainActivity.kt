@@ -117,6 +117,7 @@ fun MoonLogNavGraph(
                             viewModel,
                             textSize
                         ){
+                            viewModel.downloadUserSettings()
                             navController.navigate(MoonLogScreens.HOME.route)
                         }
                     } else{

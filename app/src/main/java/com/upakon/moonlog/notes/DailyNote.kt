@@ -2,6 +2,9 @@ package com.upakon.moonlog.notes
 
 import com.google.gson.Gson
 import com.upakon.moonlog.database.model.DayEntity
+import com.upakon.moonlog.utils.toJson
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -14,12 +17,14 @@ data class DailyNote(
     val journal: String? = null
 ){
 
+    private val gson = Gson()
+
     fun toDatabase(): DayEntity{
         return DayEntity(
             day.format(shortFormat),
-            Gson().toJson(feeling),
+            gson.toJson(feeling),
             isPeriod,
-            Gson().toJson(notes),
+            Json.encodeToString(JsonElement.serializer(),notes.toJson()),
             journal
         )
     }
