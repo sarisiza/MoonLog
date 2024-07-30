@@ -29,8 +29,8 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = YellowSunshine600, //on post it
     surfaceContainerLow = BrightMint, //main card
     background = LightLavender, //background
-    surfaceVariant = WarmCoral, //missing days card
-    inversePrimary = SoftTeal, //days
+    surfaceVariant = SoftTeal, //days
+    inversePrimary = WarmCoral, //missing days card
     onSurfaceVariant = SoftTeal700 //on day
 )
 
@@ -48,8 +48,8 @@ private val LightColorScheme = lightColorScheme(
     onSurface = YellowSunshine600, //on post it
     surfaceContainerLow = BrightMint, //main card
     background = LightLavender, //background
-    surfaceVariant = WarmCoral, //missing days card
-    inversePrimary = SoftTeal, //days
+    surfaceVariant = SoftTeal, //days
+    inversePrimary = WarmCoral, //missing days card
     onSurfaceVariant = SoftTeal700 //on day
 
     /* Other default colors to override
