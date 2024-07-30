@@ -35,7 +35,7 @@ import com.makeappssimple.abhimanyu.composeemojipicker.ComposeEmojiPickerBottomS
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.Feeling
 import com.upakon.moonlog.notes.Tracker
-import com.upakon.moonlog.ui.theme.TextSize
+import com.upakon.moonlog.ui.theme.Typography
 import com.upakon.moonlog.utils.toLocalDate
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -70,7 +70,6 @@ fun PickDate(
 @Composable
 fun <T>MoonDropDown(
     items: List<T>,
-    textSize: TextUnit,
     selected: T? = null,
     onSelected: (T) -> Unit
 ){
@@ -91,9 +90,7 @@ fun <T>MoonDropDown(
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier.menuAnchor(),
-                textStyle = androidx.compose.ui.text.TextStyle(
-                    fontSize = textSize
-                )
+                textStyle = Typography.bodyMedium
             )
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -104,7 +101,7 @@ fun <T>MoonDropDown(
                         text = {
                             Text(
                                 text = getItemText(item),
-                                fontSize = textSize
+                                style = Typography.bodyMedium
                             ) },
                         onClick = {
                             selectedItem = item
@@ -123,7 +120,6 @@ fun <T>MoonDropDown(
 @Composable
 fun MoodEditor(
     id : Int,
-    textSize: TextSize,
     onDismiss: () -> Unit,
     onSave: (Feeling) -> Unit
 ) {
@@ -158,7 +154,7 @@ fun MoodEditor(
             ) {
                 Text(
                     text = stringResource(R.string.save),
-                    fontSize = textSize.textSize
+                    style = Typography.bodyMedium
                 )
             }
         },
@@ -180,15 +176,13 @@ fun MoodEditor(
                     OutlinedTextField(
                         value = name,
                         onValueChange = {name = it},
-                        textStyle = androidx.compose.ui.text.TextStyle(
-                            fontSize = textSize.textSize
-                        )
+                        textStyle = Typography.bodyMedium
                     )
                 }
                 if(error){
                     Text(
                         text = stringResource(id = R.string.missing_info),
-                        fontSize = textSize.textSize,
+                        style = Typography.bodyMedium,
                         color = Color.Red
                     )
                 }
@@ -231,7 +225,6 @@ fun EmojiPickerDialog(
 
 @Composable
 fun TrackerEditor(
-    textSize: TextSize,
     onDismiss: () -> Unit,
     onSave: (Tracker) -> Unit
 ){
@@ -256,7 +249,7 @@ fun TrackerEditor(
             }) {
                 Text(
                     text = stringResource(id = R.string.save),
-                    fontSize = textSize.textSize
+                    style = Typography.bodyMedium
                 )
             }
         },
@@ -267,29 +260,25 @@ fun TrackerEditor(
                 Row {
                     Text(
                         text = stringResource(id = R.string.tracker_name),
-                        fontSize = textSize.textSize,
+                        style = Typography.bodyMedium,
                         modifier = Modifier.align(Alignment.CenterVertically)
                     )
                     OutlinedTextField(
                         value = name,
                         onValueChange = {name = it},
-                        textStyle = androidx.compose.ui.text.TextStyle(
-                            fontSize = textSize.textSize
-                        )
+                        textStyle = Typography.bodyMedium
                     )
                 }
                 Row {
                     Text(
                         text = stringResource(id = R.string.unit_name),
-                        fontSize = textSize.textSize,
+                        style = Typography.bodyMedium,
                         modifier = Modifier.align(Alignment.CenterVertically)
                     )
                     OutlinedTextField(
                         value = unit,
                         onValueChange = {unit = it},
-                        textStyle = androidx.compose.ui.text.TextStyle(
-                            fontSize = textSize.textSize
-                        )
+                        textStyle = Typography.bodyMedium
                     )
                 }
             }

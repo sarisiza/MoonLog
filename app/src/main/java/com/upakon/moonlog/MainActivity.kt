@@ -43,7 +43,6 @@ import com.upakon.moonlog.ui.screens.MoonLogScreens
 import com.upakon.moonlog.ui.screens.ProfileScreen
 import com.upakon.moonlog.ui.screens.SettingsPage
 import com.upakon.moonlog.ui.theme.MoonLogTheme
-import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import org.koin.androidx.compose.viewModel
 import java.util.Locale
@@ -60,7 +59,6 @@ class MainActivity : AppCompatActivity() {
             MoonLogTheme {
                 // A surface container using the 'background' color from the theme
                 val moonLogViewModel: MoonLogViewModel by viewModel()
-                val textSize = TextSize()
                 val navController = rememberNavController()
                 moonLogViewModel.downloadUserSettings()
                 var userSettingsState by remember {
@@ -81,8 +79,7 @@ class MainActivity : AppCompatActivity() {
                     MoonLogNavGraph(
                         navController = navController,
                         viewModel = moonLogViewModel,
-                        modifier = Modifier.padding(pad),
-                        textSize = textSize
+                        modifier = Modifier.padding(pad)
                     )
                 }
             }
@@ -94,8 +91,7 @@ class MainActivity : AppCompatActivity() {
 fun MoonLogNavGraph(
     navController: NavHostController,
     viewModel: MoonLogViewModel,
-    modifier: Modifier,
-    textSize: TextSize
+    modifier: Modifier
 ){
     NavHost(
         navController = navController,
@@ -114,8 +110,7 @@ fun MoonLogNavGraph(
                 is UiState.SUCCESS -> {
                     if(settingsState.data.username == null){
                         SettingsPage(
-                            viewModel,
-                            textSize
+                            viewModel
                         ){
                             viewModel.downloadUserSettings()
                             navController.navigate(MoonLogScreens.HOME.route)
@@ -132,22 +127,19 @@ fun MoonLogNavGraph(
             viewModel.getFeelings()
             viewModel.getTrackers()
             HomePage(
-                viewModel = viewModel,
-                textSize = textSize
+                viewModel = viewModel
             )
         }
         composable(MoonLogScreens.CALENDAR.route){
             Column {
                 CalendarScreen(
-                    viewModel = viewModel,
-                    textSize = textSize
+                    viewModel = viewModel
                 )
             }
         }
         composable(MoonLogScreens.PROFILE.route){
             ProfileScreen(
-                viewModel = viewModel,
-                textSize = textSize)
+                viewModel = viewModel)
         }
     }
 }

@@ -30,15 +30,14 @@ import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Tracker
-import com.upakon.moonlog.ui.theme.TextSize
+import com.upakon.moonlog.ui.theme.Typography
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 
 private const val TAG = "NotesView"
 @Composable
 fun NotesView(
-    viewModel: MoonLogViewModel,
-    textSize: TextSize
+    viewModel: MoonLogViewModel
 ) {
     val day = viewModel.currentDay.collectAsState().value
     val note = viewModel.notesState.collectAsState().value[day]
@@ -72,7 +71,7 @@ fun NotesView(
                     ) {
                         Text(
                             text = day.format(DailyNote.shortFormat),
-                            fontSize = textSize.titleSize,
+                            style = Typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         val daysFrom = viewModel.getDaysFromPeriod(day)
@@ -80,18 +79,18 @@ fun NotesView(
                             val daysUntil = viewModel.getDaysUntilNextPeriod(day)
                             Text(
                                 text = "${stringResource(id = R.string.day)} $daysFrom",
-                                fontSize = textSize.textSize
+                                style = Typography.bodyMedium
                             )
                             Text(
                                 text = "$daysUntil ${getDaysUntilText(daysUntil = daysUntil)}",
-                                fontSize = textSize.textSize
+                                style = Typography.bodyMedium
                             )
                             val chance = if(viewModel.calculatePregnantChance(daysFrom))
                                 stringResource(id = R.string.high)
                             else stringResource(id = R.string.low)
                             Text(
                                 text = "${stringResource(id = R.string.pregnant_chances)} $chance",
-                                fontSize = textSize.textSize
+                                style = Typography.bodyMedium
                             )
                         }
                     }
@@ -116,7 +115,7 @@ fun NotesView(
                             item {
                                 Text(
                                     text = "${stringResource(id = R.string.i_feel)} ${it.emoji} ${it.name}",
-                                    fontSize = textSize.textSize,
+                                    style = Typography.bodyMedium,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -132,7 +131,7 @@ fun NotesView(
                             items(trackers){
                                 Text(
                                     text = "${stringResource(id = R.string.bullet)} $it",
-                                    fontSize = textSize.textSize
+                                    style = Typography.bodyMedium
                                 )
                             }
                         }
@@ -158,13 +157,13 @@ fun NotesView(
                 ){
                     Text(
                         text = stringResource(id = R.string.journal),
-                        fontSize = textSize.textSize,
+                        style = Typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     note?.journal?.let {
                         Text(
                             text = it,
-                            fontSize = textSize.textSize
+                            style = Typography.bodyMedium
                         )
                     }
                 }
@@ -179,7 +178,6 @@ fun NotesView(
                 note = note,
                 feelings = feelingsState.data,
                 trackers = trackersState.data,
-                textSize = textSize,
                 onDismiss = { showNotesEdit = false }
             ){
                 viewModel.saveDailyNote(it)
@@ -190,7 +188,6 @@ fun NotesView(
     if(showJournalEntry){
         JournalEntryScreen(
             note = note,
-            textSize = textSize,
             onDismiss = { showJournalEntry = false }
         ) {entry ->
             val newNote = note?.let { dailyNote ->

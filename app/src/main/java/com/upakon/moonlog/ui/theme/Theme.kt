@@ -16,28 +16,43 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Gray1,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
-    primaryContainer = Purple1, //calendar normal day
-    onPrimaryContainer = Purple2, //selected day
-    onPrimary = Pink80,
-    surfaceContainerHigh = RedBright, //period day
-    surfaceContainerLow = RedLight //possible period
+    primary = Charcoal, //texts
+    secondary = MutedNavy, //titles
+    tertiary = LightGray, //navigation texts
+    primaryContainer = RoyalPurple, //navigation
+    onPrimaryContainer = RoyalPurple700, //on navigation
+    secondaryContainer = SoftRed, //period day
+    onSecondaryContainer = SoftRed400, //on period day
+    tertiaryContainer = PalePink, //prediction day
+    onTertiaryContainer = PalePink300, //on prediction day
+    surfaceContainerHigh = YellowSunshine, //post its
+    onSurface = YellowSunshine600, //on post it
+    surfaceContainerLow = BrightMint, //main card
+    background = LightLavender, //background
+    surfaceVariant = WarmCoral, //missing days card
+    inversePrimary = SoftTeal, //days
+    onSurfaceVariant = SoftTeal700 //on day
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Gray1,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
-    primaryContainer = Purple1,
-    onPrimaryContainer = Purple2,
-    onPrimary = Pink80,
-    surfaceContainerHigh = RedBright,
-    surfaceContainerLow = RedLight
+    primary = Charcoal, //texts
+    secondary = MutedNavy, //titles
+    tertiary = LightGray, //navigation texts
+    primaryContainer = RoyalPurple, //navigation
+    onPrimaryContainer = RoyalPurple700, //on navigation
+    secondaryContainer = SoftRed, //period day
+    onSecondaryContainer = SoftRed400, //on period day
+    tertiaryContainer = PalePink, //prediction day
+    onTertiaryContainer = PalePink300, //on prediction day
+    surfaceContainerHigh = YellowSunshine, //post its
+    onSurface = YellowSunshine600, //on post it
+    surfaceContainerLow = BrightMint, //main card
+    background = LightLavender, //background
+    surfaceVariant = WarmCoral, //missing days card
+    inversePrimary = SoftTeal, //days
+    onSurfaceVariant = SoftTeal700 //on day
 
     /* Other default colors to override
-    background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,

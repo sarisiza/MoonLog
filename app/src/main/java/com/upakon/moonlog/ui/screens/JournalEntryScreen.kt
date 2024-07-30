@@ -22,14 +22,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
-import com.upakon.moonlog.ui.theme.TextSize
+import com.upakon.moonlog.ui.theme.Typography
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import java.time.LocalDate
 
 @Composable
 fun JournalEntryScreen(
     note: DailyNote?,
-    textSize: TextSize,
     onDismiss: () -> Unit,
     onClick: (String) -> Unit
 ){
@@ -47,7 +46,7 @@ fun JournalEntryScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.save),
-                    fontSize = textSize.titleSize
+                    style = Typography.titleMedium
                 )
             }
         },
@@ -59,7 +58,7 @@ fun JournalEntryScreen(
             ) {
                 Text(
                     text = note?.day?.format(DailyNote.longFormat) ?: LocalDate.now().format(DailyNote.longFormat),
-                    fontSize = textSize.headerSize,
+                    style = Typography.headlineMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -70,9 +69,7 @@ fun JournalEntryScreen(
                     onValueChange = {
                         journalEntry = it
                     },
-                    textStyle = TextStyle(
-                        fontSize = textSize.textSize
-                    ),
+                    textStyle = Typography.bodyMedium,
                     modifier = Modifier
                         .height(500.dp)
                         .fillMaxWidth()

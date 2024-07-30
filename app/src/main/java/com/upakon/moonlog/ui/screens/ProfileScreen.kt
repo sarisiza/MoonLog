@@ -41,15 +41,14 @@ import com.makeappssimple.abhimanyu.composeemojipicker.ComposeEmojiPickerBottomS
 import com.makeappssimple.abhimanyu.composeemojipicker.Emoji
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.Feeling
-import com.upakon.moonlog.ui.theme.TextSize
+import com.upakon.moonlog.ui.theme.Typography
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.utils.getNextId
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 
 @Composable
 fun ProfileScreen(
-    viewModel: MoonLogViewModel,
-    textSize: TextSize
+    viewModel: MoonLogViewModel
 ) {
     Column(
         modifier = Modifier
@@ -68,7 +67,7 @@ fun ProfileScreen(
             }
             Text(
                 text = "${stringResource(id = R.string.welcome_short)} ${settings.username}!",
-                fontSize = textSize.headerSize,
+                style = Typography.headlineMedium,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(5.dp)
@@ -82,7 +81,7 @@ fun ProfileScreen(
                 val moodsState = viewModel.feelingsList.collectAsState().value
                 Text(
                     text = stringResource(id = R.string.my_moods),
-                    fontSize = textSize.titleSize
+                    style = Typography.titleMedium
                 )
                 LazyColumn(
                   modifier = Modifier.padding(10.dp)
@@ -101,7 +100,7 @@ fun ProfileScreen(
                             items(moodsState.data){
                                 Text(
                                     text = "${it.emoji} ${it.name}",
-                                    fontSize = textSize.textSize
+                                    style = Typography.bodyMedium
                                 )
                             }
                         }
@@ -119,7 +118,7 @@ fun ProfileScreen(
                         )
                         Text(
                             text = stringResource(id = R.string.add_mood),
-                            fontSize = textSize.titleSize
+                            style = Typography.titleMedium
                         )
                     }
                 }
@@ -134,7 +133,7 @@ fun ProfileScreen(
                 val trackersState = viewModel.trackersList.collectAsState().value
                 Text(
                     text = stringResource(id = R.string.my_trackers),
-                    fontSize = textSize.titleSize
+                    style = Typography.titleMedium
                 )
                 LazyColumn(
                     modifier = Modifier.padding(10.dp)
@@ -150,7 +149,7 @@ fun ProfileScreen(
                             items(trackersState.data){
                                 Text(
                                     text = "${stringResource(id = R.string.bullet)} ${it.name}",
-                                    fontSize = textSize.textSize
+                                    style = Typography.bodyMedium
                                 )
                             }
                         }
@@ -168,7 +167,7 @@ fun ProfileScreen(
                         )
                         Text(
                             text = stringResource(id = R.string.add_tracker),
-                            fontSize = textSize.titleSize
+                            style = Typography.titleMedium
                         )
                     }
                 }
@@ -176,7 +175,6 @@ fun ProfileScreen(
             if(showMoodEditor){
                 MoodEditor(
                     id = feelingId,
-                    textSize = textSize,
                     onDismiss = {showMoodEditor = false}
                 ) {
                     viewModel.addFeeling(it)
@@ -186,7 +184,6 @@ fun ProfileScreen(
             }
             if(showTrackerEditor){
                 TrackerEditor(
-                    textSize = textSize,
                     onDismiss = { showTrackerEditor = false }
                 ) {
                     viewModel.addTracker(it)

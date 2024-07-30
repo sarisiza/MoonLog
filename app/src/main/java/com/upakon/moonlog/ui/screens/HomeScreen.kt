@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
-import com.upakon.moonlog.ui.theme.TextSize
+import com.upakon.moonlog.ui.theme.Typography
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import java.time.LocalDate
@@ -33,8 +33,7 @@ import kotlin.math.abs
 
 @Composable
 fun HomePage(
-    viewModel: MoonLogViewModel,
-    textSize: TextSize
+    viewModel: MoonLogViewModel
 ){
     Column(
         modifier = Modifier
@@ -55,14 +54,14 @@ fun HomePage(
                 val today = LocalDate.now()
                 Text(
                     text = "${stringResource(id = R.string.welcome_short)} ${settings.data.username}!",
-                    fontSize = textSize.headerSize,
+                    style = Typography.headlineMedium,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(5.dp)
                 )
                 Text(
                     text = "${stringResource(id = R.string.today_is)} ${today.format(DailyNote.longFormat)}",
-                    fontSize = textSize.titleSize,
+                    style = Typography.titleMedium,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(5.dp)
@@ -99,7 +98,7 @@ fun HomePage(
                             ) {
                                 Text(
                                     text = "${abs(daysUntil)}",
-                                    fontSize = textSize.headerSize,
+                                    style = Typography.headlineMedium,
                                     modifier = Modifier
                                         .padding(5.dp)
                                         .align(Alignment.CenterHorizontally)
@@ -107,7 +106,7 @@ fun HomePage(
                             }
                             Text(
                                 text = daysText,
-                                fontSize = textSize.titleSize,
+                                style = Typography.titleMedium,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
@@ -123,14 +122,13 @@ fun HomePage(
                         ) {
                             Text(
                                 text = stringResource(id = R.string.start_period),
-                                fontSize = textSize.headerSize
+                                style = Typography.headlineMedium
                             )
                         }
                     }
                 }
                 NotesView(
-                    viewModel = viewModel,
-                    textSize = textSize
+                    viewModel = viewModel
                 )
                 if(showDatePicker){
                     PickDate(onDismiss = { showDatePicker = false }) { date ->

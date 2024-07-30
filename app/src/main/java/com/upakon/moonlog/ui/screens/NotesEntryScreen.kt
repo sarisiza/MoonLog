@@ -28,7 +28,7 @@ import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Feeling
 import com.upakon.moonlog.notes.Tracker
-import com.upakon.moonlog.ui.theme.TextSize
+import com.upakon.moonlog.ui.theme.Typography
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import java.time.LocalDate
@@ -41,7 +41,6 @@ fun NotesEntryScreen(
     note: DailyNote?,
     feelings: List<Feeling>,
     trackers: List<Tracker>,
-    textSize: TextSize,
     onDismiss: () -> Unit,
     onConfirm : (DailyNote) -> Unit
 ){
@@ -82,12 +81,11 @@ fun NotesEntryScreen(
                     Row {
                         Text(
                             text = stringResource(id = R.string.i_feel),
-                            fontSize = textSize.titleSize,
+                            style = Typography.titleMedium,
                             textAlign = TextAlign.Start
                         )
                         MoonDropDown(
                             items = feelings,
-                            textSize = textSize.textSize,
                             selected = currentFeeling
                         ) {
                             currentFeeling = it
@@ -101,7 +99,7 @@ fun NotesEntryScreen(
                     Row {
                         Text(
                             text = "${stringResource(id = R.string.bullet)} ${tracker.name}: ",
-                            fontSize = textSize.titleSize
+                            style = Typography.titleMedium
                         )
                         OutlinedTextField(
                             value = value.toString(),
@@ -117,16 +115,14 @@ fun NotesEntryScreen(
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number
                             ),
-                            textStyle = TextStyle(
-                                fontSize = textSize.textSize
-                            ),
+                            textStyle = Typography.bodyMedium,
                             label = {
                                 Text(text = tracker.name)
                             }
                         )
                         Text(
                             text = tracker.unit,
-                            fontSize = textSize.textSize
+                            style = Typography.bodyMedium
                         )
                     }
                 }
