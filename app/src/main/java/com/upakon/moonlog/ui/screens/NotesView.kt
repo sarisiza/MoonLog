@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Tracker
-import com.upakon.moonlog.ui.theme.Typography
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 
@@ -61,7 +62,13 @@ fun NotesView(
                         .fillMaxWidth(),
                     border = BorderStroke(
                         width = 1.dp,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.inverseSurface
+                    ),
+                    colors = CardColors(
+                        MaterialTheme.colorScheme.tertiaryContainer,
+                        MaterialTheme.colorScheme.onTertiaryContainer,
+                        MaterialTheme.colorScheme.surfaceDim,
+                        MaterialTheme.colorScheme.onSurface
                     )
                 ) {
                     Column(
@@ -71,7 +78,7 @@ fun NotesView(
                     ) {
                         Text(
                             text = day.format(DailyNote.shortFormat),
-                            style = Typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         val daysFrom = viewModel.getDaysFromPeriod(day)
@@ -79,18 +86,18 @@ fun NotesView(
                             val daysUntil = viewModel.getDaysUntilNextPeriod(day)
                             Text(
                                 text = "${stringResource(id = R.string.day)} $daysFrom",
-                                style = Typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium
                             )
                             Text(
                                 text = "$daysUntil ${getDaysUntilText(daysUntil = daysUntil)}",
-                                style = Typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium
                             )
                             val chance = if(viewModel.calculatePregnantChance(daysFrom))
                                 stringResource(id = R.string.high)
                             else stringResource(id = R.string.low)
                             Text(
                                 text = "${stringResource(id = R.string.pregnant_chances)} $chance",
-                                style = Typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
                     }
@@ -104,6 +111,12 @@ fun NotesView(
                     border = BorderStroke(
                         width = 1.dp,
                         color = Color.Black
+                    ),
+                    colors = CardColors(
+                        MaterialTheme.colorScheme.tertiaryContainer,
+                        MaterialTheme.colorScheme.onTertiaryContainer,
+                        MaterialTheme.colorScheme.surfaceDim,
+                        MaterialTheme.colorScheme.onSurface
                     )
                 ) {
                     LazyColumn(
@@ -115,7 +128,7 @@ fun NotesView(
                             item {
                                 Text(
                                     text = "${stringResource(id = R.string.i_feel)} ${it.emoji} ${it.name}",
-                                    style = Typography.bodyMedium,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -131,7 +144,7 @@ fun NotesView(
                             items(trackers){
                                 Text(
                                     text = "${stringResource(id = R.string.bullet)} $it",
-                                    style = Typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyMedium
                                 )
                             }
                         }
@@ -147,6 +160,12 @@ fun NotesView(
                 border = BorderStroke(
                     width = 1.dp,
                     color = Color.Black
+                ),
+                colors = CardColors(
+                    MaterialTheme.colorScheme.tertiaryContainer,
+                    MaterialTheme.colorScheme.onTertiaryContainer,
+                    MaterialTheme.colorScheme.surfaceDim,
+                    MaterialTheme.colorScheme.onSurface
                 )
             ) {
                 Column(
@@ -157,13 +176,13 @@ fun NotesView(
                 ){
                     Text(
                         text = stringResource(id = R.string.journal),
-                        style = Typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     note?.journal?.let {
                         Text(
                             text = it,
-                            style = Typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 }

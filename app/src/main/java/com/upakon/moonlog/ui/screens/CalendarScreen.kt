@@ -34,7 +34,8 @@ import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
 import com.upakon.moonlog.calendar.CalendarState
 import com.upakon.moonlog.notes.DailyNote
-import com.upakon.moonlog.ui.theme.Typography
+import com.upakon.moonlog.ui.theme.ColorFamily
+import com.upakon.moonlog.ui.theme.extendedColors
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.utils.getDisplayName
 import com.upakon.moonlog.utils.sortByFirst
@@ -94,13 +95,13 @@ fun CalendarScreen(
                             title = {
                                 Text(
                                     text = stringResource(id = R.string.update_period),
-                                    style = Typography.titleMedium
+                                    style = MaterialTheme.typography.titleMedium
                                 )
                             },
                             text = {
                                 Text(
                                     text = stringResource(id = R.string.your_first_day),
-                                    style = Typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyMedium
                                 )
                             },
                             onDismissRequest = {
@@ -113,7 +114,7 @@ fun CalendarScreen(
                                 }) {
                                     Text(
                                         text = stringResource(id = R.string.yes),
-                                        style = Typography.bodyMedium
+                                        style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
                             },
@@ -121,7 +122,7 @@ fun CalendarScreen(
                                 Button(onClick = { updatePeriod = false }) {
                                     Text(
                                         text = stringResource(id = R.string.no),
-                                        style = Typography.bodyMedium
+                                        style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
                             }
@@ -165,6 +166,7 @@ fun DayView(
     modifier: Modifier = Modifier,
     onSelected : (CalendarState.Date) -> Unit
 ){
+    val cardColor = getContainerColor(day = day)
     Card(
         modifier = modifier
             .clickable(
@@ -174,10 +176,10 @@ fun DayView(
             }
             .padding(4.dp),
         colors = CardColors(
-            containerColor = getContainerColor(day = day),
-            contentColor = Color.Transparent,
-            disabledContainerColor = Color.Transparent,
-            disabledContentColor = Color.Transparent
+            containerColor = if(day.isSelected) cardColor.colorContainer else cardColor.color,
+            contentColor = if(day.isSelected) cardColor.onColorContainer else cardColor.onColor,
+            disabledContainerColor = Color.White,
+            disabledContentColor = Color.White
         ),
         border = BorderStroke(
             width = 10.dp,
@@ -187,12 +189,7 @@ fun DayView(
         Box(modifier = Modifier.fillMaxWidth()){
             Text(
                 text = day.dayOfMonth,
-                style = Typography.bodyMedium,
-                color = if(day.isSelected){
-                    MaterialTheme.colorScheme.onPrimary
-                } else {
-                    MaterialTheme.colorScheme.primary
-                },
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(10.dp)
@@ -222,7 +219,7 @@ fun MonthHeader(
         Text(
             text = yearMonth.getDisplayName(),
             textAlign = TextAlign.Center,
-            style = Typography.headlineMedium,
+            style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically)
@@ -257,7 +254,7 @@ fun WeekHeader(
                     modifier = Modifier
                         .align(Alignment.Center)
                         .padding(10.dp),
-                    style = Typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }
@@ -267,16 +264,24 @@ fun WeekHeader(
 @Composable
 fun getContainerColor(
     day: CalendarState.Date
-) : Color {
+) : ColorFamily {
 
     return if (day.dayOfMonth.isEmpty())
-        Color.Transparent
-    else if (day.isSelected)
-        MaterialTheme.colorScheme.onPrimaryContainer
+        ColorFamily(
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent
+        )
     else if (day.isPeriod)
-        MaterialTheme.colorScheme.surfaceContainerHigh
+        extendedColors.customColor1
     else if (day.nextPeriod)
-        MaterialTheme.colorScheme.surfaceContainerLow
-    else MaterialTheme.colorScheme.primaryContainer
+        extendedColors.customColor2
+    else ColorFamily(
+        MaterialTheme.colorScheme.secondaryContainer,
+        MaterialTheme.colorScheme.onSecondaryContainer,
+        MaterialTheme.colorScheme.secondary,
+        MaterialTheme.colorScheme.onSecondary,
+    )
 }
 

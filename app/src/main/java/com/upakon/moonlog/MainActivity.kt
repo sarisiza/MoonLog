@@ -95,10 +95,10 @@ class MainActivity : AppCompatActivity() {
                             },
                             colors = TopAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                titleContentColor = MaterialTheme.colorScheme.tertiary,
-                                scrolledContainerColor = MaterialTheme.colorScheme.tertiary,
-                                actionIconContentColor = MaterialTheme.colorScheme.tertiary,
-                                navigationIconContentColor = MaterialTheme.colorScheme.tertiary,
+                                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                scrolledContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                             )
                         )
                     }
@@ -185,8 +185,8 @@ fun BottomMenu(
 ){
     BottomAppBar(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.tertiary
-    ) {
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+    ){
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
 

@@ -2,35 +2,28 @@ package com.upakon.moonlog.ui.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Feeling
 import com.upakon.moonlog.notes.Tracker
-import com.upakon.moonlog.ui.theme.Typography
-import com.upakon.moonlog.utils.UiState
-import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import java.time.LocalDate
 
 private const val TAG = "NotesEntryScreen"
@@ -81,7 +74,7 @@ fun NotesEntryScreen(
                     Row {
                         Text(
                             text = stringResource(id = R.string.i_feel),
-                            style = Typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium,
                             textAlign = TextAlign.Start
                         )
                         MoonDropDown(
@@ -99,7 +92,7 @@ fun NotesEntryScreen(
                     Row {
                         Text(
                             text = "${stringResource(id = R.string.bullet)} ${tracker.name}: ",
-                            style = Typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium
                         )
                         OutlinedTextField(
                             value = value.toString(),
@@ -115,14 +108,14 @@ fun NotesEntryScreen(
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number
                             ),
-                            textStyle = Typography.bodyMedium,
+                            textStyle = MaterialTheme.typography.bodyMedium,
                             label = {
                                 Text(text = tracker.name)
                             }
                         )
                         Text(
                             text = tracker.unit,
-                            style = Typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 }

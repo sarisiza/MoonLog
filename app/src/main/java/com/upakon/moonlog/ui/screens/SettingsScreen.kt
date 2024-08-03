@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,9 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.settings.UserSettings
-import com.upakon.moonlog.ui.theme.Typography
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -68,14 +66,14 @@ fun SettingsPage(
         val focusManager = LocalFocusManager.current
         Text(
             text = stringResource(R.string.welcome),
-            style = Typography.headlineMedium,
+            style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.size(12.dp))
         Row {
             Text(
                 text = stringResource(id = R.string.username),
-                style = Typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
             OutlinedTextField(
@@ -86,7 +84,7 @@ fun SettingsPage(
                 label = { Text(text = stringResource(id = R.string.username))},
                 enabled = true,
                 singleLine = true,
-                textStyle = Typography.bodyMedium,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
                     autoCorrect = false
@@ -100,7 +98,7 @@ fun SettingsPage(
         Row {
             Text(
                 text = stringResource(id = R.string.last_period),
-                style = Typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
             OutlinedTextField(
@@ -111,7 +109,7 @@ fun SettingsPage(
                 label = { Text(text = stringResource(id = R.string.last_period))},
                 readOnly = true,
                 singleLine = true,
-                textStyle = Typography.bodyMedium,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 trailingIcon = {
                     IconButton(onClick = { showDatePicker = true }) {
                         Icon(
@@ -133,7 +131,7 @@ fun SettingsPage(
         Row {
             Text(
                 text = stringResource(id = R.string.period_duration),
-                style = Typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
             OutlinedTextField(
@@ -144,7 +142,7 @@ fun SettingsPage(
                 label = { Text(text = stringResource(id = R.string.period_duration))},
                 enabled = true,
                 singleLine = true,
-                textStyle = Typography.bodyMedium,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
                     autoCorrect = false,
@@ -159,7 +157,7 @@ fun SettingsPage(
         Row {
             Text(
                 text = stringResource(id = R.string.cycle_duration),
-                style = Typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
             OutlinedTextField(
@@ -170,7 +168,7 @@ fun SettingsPage(
                 label = { Text(text = stringResource(id = R.string.cycle_duration))},
                 enabled = true,
                 singleLine = true,
-                textStyle = Typography.bodyMedium,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
                     autoCorrect = false,
@@ -185,7 +183,7 @@ fun SettingsPage(
         Row {
             Text(
                 text = stringResource(id = R.string.first_day),
-                style = Typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
             MoonDropDown(
@@ -217,7 +215,7 @@ fun SettingsPage(
             ) {
                 Text(
                     text = stringResource(id = R.string.save),
-                    style = Typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }

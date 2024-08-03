@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.DailyNote
-import com.upakon.moonlog.ui.theme.Typography
+import com.upakon.moonlog.ui.theme.extendedColors
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
 import java.time.LocalDate
@@ -54,14 +54,14 @@ fun HomePage(
                 val today = LocalDate.now()
                 Text(
                     text = "${stringResource(id = R.string.welcome_short)} ${settings.data.username}!",
-                    style = Typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(5.dp)
                 )
                 Text(
                     text = "${stringResource(id = R.string.today_is)} ${today.format(DailyNote.longFormat)}",
-                    style = Typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(5.dp)
@@ -69,7 +69,13 @@ fun HomePage(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(5.dp)
+                        .padding(5.dp),
+                    colors = CardColors(
+                        containerColor = extendedColors.customColor3.colorContainer,
+                        contentColor = extendedColors.customColor3.onColorContainer,
+                        disabledContentColor = MaterialTheme.colorScheme.surfaceDim,
+                        disabledContainerColor = MaterialTheme.colorScheme.onSurface
+                    )
                 ){
                     Row(
                         modifier = Modifier
@@ -83,22 +89,22 @@ fun HomePage(
                                 .weight(1F)
                         ) {
                             Card(
-                                colors = CardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                                    contentColor = Color.White,
-                                    disabledContentColor = Color.Transparent,
-                                    disabledContainerColor = Color.White
-                                ),
                                 border = BorderStroke(
                                     width = 1.dp,
-                                    color = MaterialTheme.colorScheme.surfaceContainerLow
+                                    color = extendedColors.customColor1.color
                                 ),
                                 modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
+                                    .align(Alignment.CenterHorizontally),
+                                colors = CardColors(
+                                    containerColor = extendedColors.customColor1.colorContainer,
+                                    contentColor = extendedColors.customColor1.onColorContainer,
+                                    disabledContentColor = MaterialTheme.colorScheme.surfaceDim,
+                                    disabledContainerColor = MaterialTheme.colorScheme.onSurface
+                                )
                             ) {
                                 Text(
                                     text = "${abs(daysUntil)}",
-                                    style = Typography.headlineMedium,
+                                    style = MaterialTheme.typography.headlineMedium,
                                     modifier = Modifier
                                         .padding(5.dp)
                                         .align(Alignment.CenterHorizontally)
@@ -106,7 +112,7 @@ fun HomePage(
                             }
                             Text(
                                 text = daysText,
-                                style = Typography.titleMedium,
+                                style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
@@ -122,7 +128,7 @@ fun HomePage(
                         ) {
                             Text(
                                 text = stringResource(id = R.string.start_period),
-                                style = Typography.headlineMedium
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     }
