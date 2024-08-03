@@ -20,17 +20,25 @@ class CalendarRepositoryImpl : CalendarRepository {
         userSettings: UserSettings
     ): List<CalendarState.Date> {
         Log.d(TAG, "getDates - selected: ${selected.format(DailyNote.shortFormat)}")
+        var emptyCount = 0
         return yearMonth.getDaysOfMonth(startingDay)
             .map {date ->
                 val dayOfMonth = if(date.monthValue == yearMonth.monthValue){
                     "${date.dayOfMonth}"
-                } else ""
+                } else {
+                    emptyCount ++
+                    ""
+                }
                 CalendarState.Date(
                     dayOfMonth,
                     date.isEqual(selected),
                     notes[date]?.isPeriod?:false,
                     date.couldBePeriod(userSettings)
                 )
+            }.run {
+                if(emptyCount >= 7){
+                    this.subList(7,this.lastIndex+1)
+                } else this
             }
     }
 
