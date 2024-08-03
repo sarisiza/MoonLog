@@ -32,9 +32,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.upakon.moonlog.R
-import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.calendar.CalendarState
 import com.upakon.moonlog.notes.DailyNote
+import com.upakon.moonlog.ui.theme.ColorFamily
+import com.upakon.moonlog.ui.theme.extendedColors
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.utils.getDisplayName
 import com.upakon.moonlog.utils.sortByFirst
@@ -48,8 +49,7 @@ import java.util.Locale
 private const val TAG = "CalendarScreen"
 @Composable
 fun CalendarScreen(
-    viewModel: MoonLogViewModel,
-    textSize: TextSize
+    viewModel: MoonLogViewModel
 ) {
     Column(
         modifier = Modifier
@@ -74,13 +74,11 @@ fun CalendarScreen(
                 nCalendar?.let {calendar ->
                     MonthHeader(
                         yearMonth = calendar.yearMonth,
-                        viewModel = viewModel,
-                        textSize = textSize
+                        viewModel = viewModel
                     )
-                    WeekHeader(textSize = textSize, start = userSettings.firstDayOfWeek!!)
+                    WeekHeader(start = userSettings.firstDayOfWeek!!)
                     MonthView(
-                        daysList = calendar.dates,
-                        textSize = textSize
+                        daysList = calendar.dates
                     ) {day ->
                         if(day.isSelected){
                             if(!currentDate.isAfter(LocalDate.now()))
@@ -90,21 +88,20 @@ fun CalendarScreen(
                         }
                     }
                     NotesView(
-                        viewModel = viewModel,
-                        textSize = textSize
+                        viewModel = viewModel
                     )
                     if(updatePeriod){
                         AlertDialog(
                             title = {
                                 Text(
                                     text = stringResource(id = R.string.update_period),
-                                    fontSize = textSize.titleSize
+                                    style = MaterialTheme.typography.titleMedium
                                 )
                             },
                             text = {
                                 Text(
                                     text = stringResource(id = R.string.your_first_day),
-                                    fontSize = textSize.textSize
+                                    style = MaterialTheme.typography.bodyMedium
                                 )
                             },
                             onDismissRequest = {
@@ -117,7 +114,7 @@ fun CalendarScreen(
                                 }) {
                                     Text(
                                         text = stringResource(id = R.string.yes),
-                                        fontSize = textSize.textSize
+                                        style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
                             },
@@ -125,7 +122,7 @@ fun CalendarScreen(
                                 Button(onClick = { updatePeriod = false }) {
                                     Text(
                                         text = stringResource(id = R.string.no),
-                                        fontSize = textSize.textSize
+                                        style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
                             }
@@ -140,7 +137,6 @@ fun CalendarScreen(
 @Composable
 fun MonthView(
     daysList: List<CalendarState.Date>,
-    textSize: TextSize,
     onSelected: (CalendarState.Date) -> Unit
 ){
     Column {
@@ -153,7 +149,6 @@ fun MonthView(
                     val item = if(index < daysList.size) daysList[index] else CalendarState.Date()
                     DayView(
                         day = item,
-                        textSize = textSize,
                         modifier = Modifier
                             .weight(1F),
                         onSelected = onSelected
@@ -168,10 +163,10 @@ fun MonthView(
 @Composable
 fun DayView(
     day: CalendarState.Date,
-    textSize: TextSize,
     modifier: Modifier = Modifier,
     onSelected : (CalendarState.Date) -> Unit
 ){
+    val cardColor = getContainerColor(day = day)
     Card(
         modifier = modifier
             .clickable(
@@ -181,10 +176,10 @@ fun DayView(
             }
             .padding(4.dp),
         colors = CardColors(
-            containerColor = getContainerColor(day = day),
-            contentColor = Color.Transparent,
-            disabledContainerColor = Color.Transparent,
-            disabledContentColor = Color.Transparent
+            containerColor = if(day.isSelected) cardColor.colorContainer else cardColor.color,
+            contentColor = if(day.isSelected) cardColor.onColorContainer else cardColor.onColor,
+            disabledContainerColor = Color.White,
+            disabledContentColor = Color.White
         ),
         border = BorderStroke(
             width = 10.dp,
@@ -194,12 +189,7 @@ fun DayView(
         Box(modifier = Modifier.fillMaxWidth()){
             Text(
                 text = day.dayOfMonth,
-                fontSize = textSize.textSize,
-                color = if(day.isSelected){
-                    MaterialTheme.colorScheme.onPrimary
-                } else {
-                    MaterialTheme.colorScheme.primary
-                },
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(10.dp)
@@ -211,8 +201,7 @@ fun DayView(
 @Composable
 fun MonthHeader(
     yearMonth: YearMonth,
-    viewModel: MoonLogViewModel,
-    textSize: TextSize
+    viewModel: MoonLogViewModel
 ){
     Row(
         modifier = Modifier
@@ -230,7 +219,7 @@ fun MonthHeader(
         Text(
             text = yearMonth.getDisplayName(),
             textAlign = TextAlign.Center,
-            fontSize = textSize.headerSize,
+            style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically)
@@ -249,7 +238,6 @@ fun MonthHeader(
 
 @Composable
 fun WeekHeader(
-    textSize: TextSize,
     start: DayOfWeek
 ){
     val days = DayOfWeek.entries.toList().sortByFirst(start).map {
@@ -266,7 +254,7 @@ fun WeekHeader(
                     modifier = Modifier
                         .align(Alignment.Center)
                         .padding(10.dp),
-                    fontSize = textSize.titleSize
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }
@@ -276,16 +264,24 @@ fun WeekHeader(
 @Composable
 fun getContainerColor(
     day: CalendarState.Date
-) : Color {
+) : ColorFamily {
 
     return if (day.dayOfMonth.isEmpty())
-        Color.Transparent
-    else if (day.isSelected)
-        MaterialTheme.colorScheme.onPrimaryContainer
+        ColorFamily(
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent
+        )
     else if (day.isPeriod)
-        MaterialTheme.colorScheme.surfaceContainerHigh
+        extendedColors.customColor1
     else if (day.nextPeriod)
-        MaterialTheme.colorScheme.surfaceContainerLow
-    else MaterialTheme.colorScheme.primaryContainer
+        extendedColors.customColor2
+    else ColorFamily(
+        MaterialTheme.colorScheme.secondaryContainer,
+        MaterialTheme.colorScheme.onSecondaryContainer,
+        MaterialTheme.colorScheme.secondary,
+        MaterialTheme.colorScheme.onSecondary,
+    )
 }
 

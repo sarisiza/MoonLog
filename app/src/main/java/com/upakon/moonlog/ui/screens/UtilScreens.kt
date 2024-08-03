@@ -16,6 +16,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
@@ -27,15 +28,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.makeappssimple.abhimanyu.composeemojipicker.ComposeEmojiPickerBottomSheetUI
 import com.upakon.moonlog.R
 import com.upakon.moonlog.notes.Feeling
 import com.upakon.moonlog.notes.Tracker
-import com.upakon.moonlog.ui.theme.TextSize
 import com.upakon.moonlog.utils.toLocalDate
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -44,6 +42,7 @@ import java.util.Locale
 
 private const val TAG = "UtilScreens"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickDate(
     onDismiss: () -> Unit,
@@ -70,7 +69,6 @@ fun PickDate(
 @Composable
 fun <T>MoonDropDown(
     items: List<T>,
-    textSize: TextUnit,
     selected: T? = null,
     onSelected: (T) -> Unit
 ){
@@ -91,9 +89,7 @@ fun <T>MoonDropDown(
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier.menuAnchor(),
-                textStyle = androidx.compose.ui.text.TextStyle(
-                    fontSize = textSize
-                )
+                textStyle = MaterialTheme.typography.bodyMedium
             )
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -104,7 +100,7 @@ fun <T>MoonDropDown(
                         text = {
                             Text(
                                 text = getItemText(item),
-                                fontSize = textSize
+                                style = MaterialTheme.typography.bodyMedium
                             ) },
                         onClick = {
                             selectedItem = item
@@ -123,7 +119,6 @@ fun <T>MoonDropDown(
 @Composable
 fun MoodEditor(
     id : Int,
-    textSize: TextSize,
     onDismiss: () -> Unit,
     onSave: (Feeling) -> Unit
 ) {
@@ -158,7 +153,7 @@ fun MoodEditor(
             ) {
                 Text(
                     text = stringResource(R.string.save),
-                    fontSize = textSize.textSize
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         },
@@ -180,15 +175,13 @@ fun MoodEditor(
                     OutlinedTextField(
                         value = name,
                         onValueChange = {name = it},
-                        textStyle = androidx.compose.ui.text.TextStyle(
-                            fontSize = textSize.textSize
-                        )
+                        textStyle = MaterialTheme.typography.bodyMedium
                     )
                 }
                 if(error){
                     Text(
                         text = stringResource(id = R.string.missing_info),
-                        fontSize = textSize.textSize,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = Color.Red
                     )
                 }
@@ -231,7 +224,6 @@ fun EmojiPickerDialog(
 
 @Composable
 fun TrackerEditor(
-    textSize: TextSize,
     onDismiss: () -> Unit,
     onSave: (Tracker) -> Unit
 ){
@@ -256,7 +248,7 @@ fun TrackerEditor(
             }) {
                 Text(
                     text = stringResource(id = R.string.save),
-                    fontSize = textSize.textSize
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         },
@@ -267,29 +259,25 @@ fun TrackerEditor(
                 Row {
                     Text(
                         text = stringResource(id = R.string.tracker_name),
-                        fontSize = textSize.textSize,
+                        style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.align(Alignment.CenterVertically)
                     )
                     OutlinedTextField(
                         value = name,
                         onValueChange = {name = it},
-                        textStyle = androidx.compose.ui.text.TextStyle(
-                            fontSize = textSize.textSize
-                        )
+                        textStyle = MaterialTheme.typography.bodyMedium
                     )
                 }
                 Row {
                     Text(
                         text = stringResource(id = R.string.unit_name),
-                        fontSize = textSize.textSize,
+                        style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.align(Alignment.CenterVertically)
                     )
                     OutlinedTextField(
                         value = unit,
                         onValueChange = {unit = it},
-                        textStyle = androidx.compose.ui.text.TextStyle(
-                            fontSize = textSize.textSize
-                        )
+                        textStyle = MaterialTheme.typography.bodyMedium
                     )
                 }
             }

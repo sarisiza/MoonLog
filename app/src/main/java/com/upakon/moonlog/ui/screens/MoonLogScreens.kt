@@ -4,5 +4,6 @@ enum class MoonLogScreens(val route: String) {
     SETTINGS("settings"),
     CALENDAR("calendar"),
     HOME("home"),
-    PROFILE("profile")
+    PROFILE("profile"),
+    LOGIN("login")
 }
