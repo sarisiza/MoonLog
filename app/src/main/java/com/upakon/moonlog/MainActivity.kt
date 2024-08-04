@@ -155,13 +155,17 @@ fun MoonLogNavGraph(
             viewModel.getTrackers()
             HomePage(
                 viewModel = viewModel
-            )
+            ){
+                navController.navigate(MoonLogScreens.PROFILE.route)
+            }
         }
         composable(MoonLogScreens.CALENDAR.route){
             Column {
                 CalendarScreen(
                     viewModel = viewModel
-                )
+                ){
+                    navController.navigate(MoonLogScreens.PROFILE.route)
+                }
             }
         }
         composable(MoonLogScreens.SETTINGS.route){

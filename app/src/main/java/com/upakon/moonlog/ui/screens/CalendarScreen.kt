@@ -49,7 +49,8 @@ import java.util.Locale
 private const val TAG = "CalendarScreen"
 @Composable
 fun CalendarScreen(
-    viewModel: MoonLogViewModel
+    viewModel: MoonLogViewModel,
+    onEmpty: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -88,7 +89,8 @@ fun CalendarScreen(
                         }
                     }
                     NotesView(
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        onEmpty
                     )
                     if(updatePeriod){
                         AlertDialog(

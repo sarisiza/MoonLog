@@ -38,7 +38,8 @@ import com.upakon.moonlog.viewmodel.MoonLogViewModel
 private const val TAG = "NotesView"
 @Composable
 fun NotesView(
-    viewModel: MoonLogViewModel
+    viewModel: MoonLogViewModel,
+    onEmpty: () -> Unit
 ) {
     val day = viewModel.currentDay.collectAsState().value
     val note = viewModel.notesState.collectAsState().value[day]
@@ -193,14 +194,18 @@ fun NotesView(
         val feelingsState = viewModel.feelingsList.collectAsState().value
         val trackersState = viewModel.trackersList.collectAsState().value
         if (feelingsState is UiState.SUCCESS && trackersState is UiState.SUCCESS){
-            NotesEntryScreen(
-                note = note,
-                feelings = feelingsState.data,
-                trackers = trackersState.data,
-                onDismiss = { showNotesEdit = false }
-            ){
-                viewModel.saveDailyNote(it)
-                showNotesEdit = false
+            if(feelingsState.data.isEmpty() && trackersState.data.isEmpty()){
+                onEmpty()
+            } else{
+                NotesEntryScreen(
+                    note = note,
+                    feelings = feelingsState.data,
+                    trackers = trackersState.data,
+                    onDismiss = { showNotesEdit = false }
+                ){
+                    viewModel.saveDailyNote(it)
+                    showNotesEdit = false
+                }
             }
         }
     }

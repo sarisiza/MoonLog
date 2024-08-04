@@ -70,18 +70,20 @@ fun NotesEntryScreen(
         },
         text = {
             LazyColumn {
-                item {
-                    Row {
-                        Text(
-                            text = stringResource(id = R.string.i_feel),
-                            style = MaterialTheme.typography.titleMedium,
-                            textAlign = TextAlign.Start
-                        )
-                        MoonDropDown(
-                            items = feelings,
-                            selected = currentFeeling
-                        ) {
-                            currentFeeling = it
+                if(feelings.isNotEmpty()){
+                    item {
+                        Row {
+                            Text(
+                                text = stringResource(id = R.string.i_feel),
+                                style = MaterialTheme.typography.titleMedium,
+                                textAlign = TextAlign.Start
+                            )
+                            MoonDropDown(
+                                items = feelings,
+                                selected = currentFeeling
+                            ) {
+                                currentFeeling = it
+                            }
                         }
                     }
                 }
