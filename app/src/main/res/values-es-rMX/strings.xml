@@ -31,4 +31,10 @@
     <string name="missing_info">* No tengo información suficiente</string>
     <string name="tracker_name">Quiero dar seguimiento a:</string>
     <string name="unit_name">Medido en:</string>
+    <string name="retry">Reintentar</string>
+    <string name="dismiss">Cancelar</string>
+    <string name="error_title">Algo salió mal</string>
+    <string name="settings_error">Hubo un error al obtener tus datos</string>
+    <string name="moods_error">Hubo un error al obtener tus estados de ánimo</string>
+    <string name="trackers_error">Hubo un error al obtener tus registros</string>
 </resources>

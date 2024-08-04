@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
@@ -300,6 +302,59 @@ fun getDaysUntilText(daysUntil : Int) : String {
         stringResource(id = R.string.days_until)
     else
         stringResource(id = R.string.days_late)
+}
+
+@Composable
+fun ErrorMessage(
+    message: String?,
+    onDismiss: () -> Unit,
+    onRetry: (() -> Unit)? = null
+){
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            if(onRetry != null){
+                Button(
+                    onClick = { onRetry() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.retry),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { onDismiss()},
+                colors = ButtonColors(
+                    MaterialTheme.colorScheme.errorContainer,
+                    MaterialTheme.colorScheme.onErrorContainer,
+                    MaterialTheme.colorScheme.surfaceDim,
+                    MaterialTheme.colorScheme.onSurface
+                )
+            ) {
+                Text(
+                    text = stringResource(id = R.string.dismiss),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        },
+        title = {
+            Text(
+                text = stringResource(id = R.string.error_title),
+                style = MaterialTheme.typography.titleMedium
+            )
+        },
+        text = {
+            if(message != null){
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    )
 }
 
 

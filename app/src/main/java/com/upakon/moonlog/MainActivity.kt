@@ -39,6 +39,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.upakon.moonlog.ui.screens.CalendarScreen
+import com.upakon.moonlog.ui.screens.ErrorMessage
 import com.upakon.moonlog.ui.screens.HomePage
 import com.upakon.moonlog.ui.screens.JournalEntryScreen
 import com.upakon.moonlog.ui.screens.MenuItems
@@ -126,10 +127,13 @@ fun MoonLogNavGraph(
         startDestination = MoonLogScreens.LOGIN.route
     ){
         composable(MoonLogScreens.LOGIN.route){
+            var showError by remember {
+                mutableStateOf(false)
+            }
             when(val settingsState = viewModel.userSettings.collectAsState().value){
                 is UiState.ERROR -> {
-                    Log.e(TAG, "MoonLogNavGraph: ${settingsState.error}", settingsState.error)
-                    Text(text = "Error: ${settingsState.error.localizedMessage}")
+                    showError = true
+                    //todo add analytics
                 }
                 UiState.LOADING -> {
                     CircularProgressIndicator()
@@ -145,6 +149,15 @@ fun MoonLogNavGraph(
                     } else{
                         navController.navigate(MoonLogScreens.HOME.route)
                     }
+                }
+            }
+            if(showError){
+                ErrorMessage(
+                    message = stringResource(id = R.string.settings_error),
+                    onDismiss = { showError = false }
+                ) {
+                    viewModel.downloadUserSettings()
+                    showError = false
                 }
             }
         }
