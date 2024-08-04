@@ -57,9 +57,17 @@ fun CalendarScreen(
             .fillMaxWidth()
             .padding(5.dp)
     ) {
+        var message by remember {
+            mutableStateOf("")
+        }
+        var showError by remember {
+            mutableStateOf(false)
+        }
         when(val settings = viewModel.userSettings.collectAsState().value){
             is UiState.ERROR -> {
-                //Todo show error
+                //todo add analytics
+                message = stringResource(id = R.string.settings_error)
+                showError = true
             }
             UiState.LOADING -> {
                 CircularProgressIndicator()
@@ -131,6 +139,15 @@ fun CalendarScreen(
                         )
                     }
                 }
+            }
+        }
+        if(showError){
+            ErrorMessage(
+                message = message,
+                onDismiss = { showError = false }
+            ){
+                viewModel.downloadUserSettings()
+                showError = true
             }
         }
     }

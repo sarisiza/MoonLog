@@ -45,6 +45,12 @@ fun ProfileScreen(
         val currentSettings = viewModel.currentSettings
         var feelingId = 0
         var trackerId = 0
+        var message by remember {
+            mutableStateOf("")
+        }
+        var showError by remember {
+            mutableStateOf(false)
+        }
         currentSettings?.let { settings ->
             var showMoodEditor by remember{
                 mutableStateOf(false)
@@ -85,7 +91,11 @@ fun ProfileScreen(
                 ) {
                     when (moodsState){
                         is UiState.ERROR -> {
-                            //todo handle error
+                            //todo add analytics
+                            item{
+                                message = stringResource(id = R.string.moods_error)
+                                showError = true
+                            }
                         }
                         UiState.LOADING ->{
                             item {
@@ -147,7 +157,13 @@ fun ProfileScreen(
                         .fillMaxHeight(0.8f)
                 ) {
                     when (trackersState) {
-                        is UiState.ERROR -> TODO()
+                        is UiState.ERROR -> {
+                            //todo add analytics
+                            item{
+                                message = stringResource(id = R.string.trackers_error)
+                                showError = true
+                            }
+                        }
                         UiState.LOADING -> {
                             item {
                                 CircularProgressIndicator()
@@ -201,8 +217,15 @@ fun ProfileScreen(
                 }
             }
         } ?: run {
-            //todo handle null user
-            //shouldn't get here, but just in case
+            //todo add analytics
+            message = stringResource(id = R.string.settings_error)
+            showError = true
+        }
+        if(showError){
+            ErrorMessage(
+                message = message,
+                onDismiss = { showError = false }
+            )
         }
     }
 }

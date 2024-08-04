@@ -32,4 +32,10 @@
     <string name="tracker_name">"I want to track: "</string>
     <string name="unit_name">That is measured in:</string>
     <string name="bullet" translatable="false">•</string>
+    <string name="retry">retry</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="error_title">Something went wrong</string>
+    <string name="settings_error">Something went wrong while retrieving your information</string>
+    <string name="moods_error">Something went wrong when retrieving your moods</string>
+    <string name="trackers_error">Something went wrong when retrieving your trackers</string>
 </resources>
