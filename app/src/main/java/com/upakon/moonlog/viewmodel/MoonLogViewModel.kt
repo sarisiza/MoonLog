@@ -3,6 +3,8 @@ package com.upakon.moonlog.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import com.upakon.moonlog.calendar.CalendarRepository
 import com.upakon.moonlog.calendar.CalendarState
 import com.upakon.moonlog.database.repository.DatabaseRepository
@@ -40,7 +42,8 @@ class MoonLogViewModel(
     private val settingsStore: PreferencesStore,
     private val database: DatabaseRepository,
     private val calendar: CalendarRepository,
-    private val dispatcher : CoroutineDispatcher
+    private val dispatcher : CoroutineDispatcher,
+    private val analytics: FirebaseAnalytics
 ) : ViewModel() {
 
     private val _userSettings: MutableStateFlow<UiState<UserSettings>> =
@@ -389,4 +392,35 @@ class MoonLogViewModel(
         }
     }
 
+    //analytics logging events
+    fun sendDisplayError(origin: String, error: Exception){
+        analytics.logEvent("display_error"){
+            param("origin",origin)
+            param("error_message", error.localizedMessage?:"Unknown error")
+        }
+    }
+
+    fun sendLoginEvent(firstLogin: Boolean){
+        val method = if(firstLogin) "Manual login" else "Automatic login"
+        val event = if(firstLogin) FirebaseAnalytics.Event.SIGN_UP else FirebaseAnalytics.Event.LOGIN
+        analytics.logEvent(event){
+            param(FirebaseAnalytics.Param.METHOD,method)
+        }
+    }
+
+    fun sendNoteEvent(noteType: NoteType, noteAction: NoteAction){
+        analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT){
+            param(FirebaseAnalytics.Param.CONTENT, noteAction.name)
+            param(FirebaseAnalytics.Param.CONTENT_TYPE,noteType.name)
+        }
+    }
+
+}
+
+enum class NoteType{
+    MOOD, TRACKER, JOURNAL
+}
+
+enum class NoteAction{
+    CREATE, ADD
 }

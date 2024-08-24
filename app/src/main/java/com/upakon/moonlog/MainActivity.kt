@@ -132,14 +132,15 @@ fun MoonLogNavGraph(
             }
             when(val settingsState = viewModel.userSettings.collectAsState().value){
                 is UiState.ERROR -> {
+                    viewModel.sendDisplayError("Settings",settingsState.error)
                     showError = true
-                    //todo add analytics
                 }
                 UiState.LOADING -> {
                     CircularProgressIndicator()
                 }
                 is UiState.SUCCESS -> {
                     if(settingsState.data.username == null){
+                        viewModel.sendLoginEvent(true)
                         SettingsPage(
                             viewModel
                         ){
@@ -147,6 +148,7 @@ fun MoonLogNavGraph(
                             navController.navigate(MoonLogScreens.HOME.route)
                         }
                     } else{
+                        viewModel.sendLoginEvent(false)
                         navController.navigate(MoonLogScreens.HOME.route)
                     }
                 }

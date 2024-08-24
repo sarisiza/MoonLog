@@ -49,7 +49,7 @@ fun HomePage(
         }
         when(val settings = viewModel.userSettings.collectAsState().value){
             is UiState.ERROR -> {
-                //todo add analytics
+                viewModel.sendDisplayError("Settings",settings.error)
                 message = stringResource(id = R.string.settings_error)
                 showError = true
             }

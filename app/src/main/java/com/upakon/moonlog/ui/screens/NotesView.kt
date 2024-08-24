@@ -34,6 +34,8 @@ import com.upakon.moonlog.notes.DailyNote
 import com.upakon.moonlog.notes.Tracker
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
+import com.upakon.moonlog.viewmodel.NoteAction
+import com.upakon.moonlog.viewmodel.NoteType
 
 private const val TAG = "NotesView"
 @Composable
@@ -203,6 +205,12 @@ fun NotesView(
                     trackers = trackersState.data,
                     onDismiss = { showNotesEdit = false }
                 ){
+                    if(it.feeling != null){
+                        viewModel.sendNoteEvent(NoteType.MOOD,NoteAction.ADD)
+                    }
+                    if((it.notes["trackers"] as Map<Tracker,Double>?)?.isNotEmpty() == true){
+                        viewModel.sendNoteEvent(NoteType.TRACKER,NoteAction.ADD)
+                    }
                     viewModel.saveDailyNote(it)
                     showNotesEdit = false
                 }
@@ -226,6 +234,7 @@ fun NotesView(
                 day,
                 journal = entry
             )
+            viewModel.sendNoteEvent(NoteType.JOURNAL,NoteAction.ADD)
             viewModel.saveDailyNote(newNote)
             showJournalEntry = false
         }

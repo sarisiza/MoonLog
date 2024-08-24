@@ -32,6 +32,8 @@ import com.upakon.moonlog.R
 import com.upakon.moonlog.utils.UiState
 import com.upakon.moonlog.utils.getNextId
 import com.upakon.moonlog.viewmodel.MoonLogViewModel
+import com.upakon.moonlog.viewmodel.NoteAction
+import com.upakon.moonlog.viewmodel.NoteType
 
 @Composable
 fun ProfileScreen(
@@ -91,7 +93,7 @@ fun ProfileScreen(
                 ) {
                     when (moodsState){
                         is UiState.ERROR -> {
-                            //todo add analytics
+                            viewModel.sendDisplayError("Moods",moodsState.error)
                             item{
                                 message = stringResource(id = R.string.moods_error)
                                 showError = true
@@ -158,7 +160,7 @@ fun ProfileScreen(
                 ) {
                     when (trackersState) {
                         is UiState.ERROR -> {
-                            //todo add analytics
+                            viewModel.sendDisplayError("Trackers",trackersState.error)
                             item{
                                 message = stringResource(id = R.string.trackers_error)
                                 showError = true
@@ -202,6 +204,7 @@ fun ProfileScreen(
                     id = feelingId,
                     onDismiss = {showMoodEditor = false}
                 ) {
+                    viewModel.sendNoteEvent(NoteType.MOOD,NoteAction.CREATE)
                     viewModel.addFeeling(it)
                     viewModel.getFeelings()
                     showMoodEditor = false
@@ -211,13 +214,14 @@ fun ProfileScreen(
                 TrackerEditor(
                     onDismiss = { showTrackerEditor = false }
                 ) {
+                    viewModel.sendNoteEvent(NoteType.TRACKER,NoteAction.CREATE)
                     viewModel.addTracker(it)
                     viewModel.getTrackers()
                     showTrackerEditor = false
                 }
             }
         } ?: run {
-            //todo add analytics
+            viewModel.sendDisplayError("Settings",NullPointerException())
             message = stringResource(id = R.string.settings_error)
             showError = true
         }

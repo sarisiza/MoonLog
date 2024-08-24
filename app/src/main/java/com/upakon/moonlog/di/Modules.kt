@@ -5,6 +5,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import com.upakon.moonlog.calendar.CalendarRepository
 import com.upakon.moonlog.calendar.CalendarRepositoryImpl
 import com.upakon.moonlog.database.repository.DatabaseRepository
@@ -63,6 +66,10 @@ val dataModule = module {
     single<CalendarRepository> {
         CalendarRepositoryImpl()
     }
+    //analytics
+    single<FirebaseAnalytics>{
+        Firebase.analytics
+    }
 }
 
 /**
@@ -74,7 +81,8 @@ val viewModelModule = module {
             settingsStore = get(),
             database = get(),
             calendar = get(),
-            dispatcher = Dispatchers.IO
+            dispatcher = Dispatchers.IO,
+            analytics = get()
         )
     }
 }
