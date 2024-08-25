@@ -215,7 +215,7 @@ fun SettingsPage(
             ) {
                 Text(
                     text = stringResource(id = R.string.save),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
         }

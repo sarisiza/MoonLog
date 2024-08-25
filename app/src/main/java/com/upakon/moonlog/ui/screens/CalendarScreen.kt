@@ -195,8 +195,8 @@ fun DayView(
             }
             .padding(4.dp),
         colors = CardColors(
-            containerColor = if(day.isSelected) cardColor.colorContainer else cardColor.color,
-            contentColor = if(day.isSelected) cardColor.onColorContainer else cardColor.onColor,
+            containerColor = if(day.isSelected) cardColor.color else cardColor.colorContainer,
+            contentColor = if(day.isSelected) cardColor.onColor else cardColor.onColorContainer,
             disabledContainerColor = Color.White,
             disabledContentColor = Color.White
         ),
@@ -297,10 +297,10 @@ fun getContainerColor(
     else if (day.nextPeriod)
         extendedColors.customColor2
     else ColorFamily(
-        MaterialTheme.colorScheme.secondaryContainer,
-        MaterialTheme.colorScheme.onSecondaryContainer,
         MaterialTheme.colorScheme.secondary,
         MaterialTheme.colorScheme.onSecondary,
+        MaterialTheme.colorScheme.secondaryContainer,
+        MaterialTheme.colorScheme.onSecondaryContainer,
     )
 }
 
