@@ -71,10 +71,10 @@ private val darkScheme = darkColorScheme(
     onSecondary = onSecondaryDark,
     secondaryContainer = secondaryContainerDark,
     onSecondaryContainer = onSecondaryContainerDark,
-    tertiary = tertiaryContainerDark,
-    onTertiary = onTertiaryContainerDark,
-    tertiaryContainer = tertiaryDark,
-    onTertiaryContainer = onTertiaryDark,
+    tertiary = tertiaryDark,
+    onTertiary = onTertiaryDark,
+    tertiaryContainer = tertiaryContainerDark,
+    onTertiaryContainer = onTertiaryContainerDark,
     error = errorDark,
     onError = onErrorDark,
     errorContainer = errorContainerDark,
@@ -275,10 +275,10 @@ val extendedLight = ExtendedColorScheme(
 
 val extendedDark = ExtendedColorScheme(
     customColor1 = ColorFamily(
-        customColor1ContainerDark,
-        onCustomColor1ContainerDark,
         customColor1Dark,
         onCustomColor1Dark,
+        customColor1ContainerDark,
+        onCustomColor1ContainerDark,
     ),
     customColor2 = ColorFamily(
         customColor2Dark,
