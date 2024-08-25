@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "480927399428",
+    "project_id": "moonlog-1ce64",
+    "storage_bucket": "moonlog-1ce64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480927399428:android:498df525962fc6d636ff51",
+        "android_client_info": {
+          "package_name": "com.upakon.moonlog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfO8RLbdB4iP_992OHp_YZLDhOvhFf2W8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

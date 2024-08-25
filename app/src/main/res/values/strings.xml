@@ -1,3 +1,41 @@
 <resources>
-    <string name="app_name">Moon Log</string>
+    <string name="app_name" translatable="false">Moon Log</string>
+    <string name="username">Username</string>
+    <string name="last_period">Last Period Date</string>
+    <string name="period_duration">Period Duration</string>
+    <string name="cycle_duration">Cycle Duration</string>
+    <string name="save">Save</string>
+    <string name="welcome">Welcome to Moon Log!</string>
+    <string name="first_day">Week starts on:</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="update_period">Update period</string>
+    <string name="your_first_day">Is your period starting today?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="welcome_short">Welcome,</string>
+    <string name="today_is">Today is:</string>
+    <string name="days_until">Days until next period</string>
+    <string name="days_late">Days late</string>
+    <string name="start_period">Start Period!</string>
+    <string name="day">Day</string>
+    <string name="pregnant_chances">Pregnant chances:</string>
+    <string name="high">High</string>
+    <string name="low">Low</string>
+    <string name="i_feel">I\'m feeling:</string>
+    <string name="journal">Journal</string>
+    <string name="my_moods">My Moods</string>
+    <string name="my_trackers">My Trackers</string>
+    <string name="add_mood">Add Mood</string>
+    <string name="add_tracker">Add Tracker</string>
+    <string name="missing_info">* Some information is missing</string>
+    <string name="tracker_name">"I want to track: "</string>
+    <string name="unit_name">That is measured in:</string>
+    <string name="bullet" translatable="false">•</string>
+    <string name="retry">retry</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="error_title">Something went wrong</string>
+    <string name="settings_error">Something went wrong while retrieving your information</string>
+    <string name="moods_error">Something went wrong when retrieving your moods</string>
+    <string name="trackers_error">Something went wrong when retrieving your trackers</string>
 </resources>
