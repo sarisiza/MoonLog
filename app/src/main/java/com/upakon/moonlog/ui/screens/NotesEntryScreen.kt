@@ -89,7 +89,7 @@ fun NotesEntryScreen(
                 }
                 items(trackers){ tracker ->
                     var value by remember {
-                        mutableDoubleStateOf(currentTrackers[tracker] ?: 0.0)
+                        mutableStateOf(currentTrackers[tracker]?.toString() ?: "")
                     }
                     Row {
                         Text(
@@ -101,8 +101,8 @@ fun NotesEntryScreen(
                             onValueChange = {
                                 try {
                                     Log.d(TAG, "NotesEntryScreen: ${it}")
-                                    value = it.toDouble()
-                                    currentTrackers[tracker] = value
+                                    value = it
+                                    currentTrackers[tracker] = value.toDouble()
                                 }catch (e: Exception){
                                     Log.e(TAG, "NotesEntryScreen: ${e.localizedMessage}", e)
                                 }
