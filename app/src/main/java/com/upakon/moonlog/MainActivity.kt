@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
@@ -58,8 +59,8 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        val splashScreen = installSplashScreen()
         //supportActionBar?.hide()
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(Locale.getDefault().language)
@@ -71,11 +72,11 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 val moonLogViewModel: MoonLogViewModel by viewModel()
                 val settings = moonLogViewModel.userSettings.collectAsState().value
-                splashScreen.apply {
-                    setKeepOnScreenCondition{
-                        settings !is UiState.LOADING
-                    }
-                }
+//                splashScreen.apply {
+//                    setKeepOnScreenCondition{
+//                        settings !is UiState.LOADING
+//                    }
+//                }
                 val navController = rememberNavController()
                 moonLogViewModel.downloadUserSettings()
                 var userSettingsState by remember {
