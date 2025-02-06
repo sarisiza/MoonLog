@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -53,27 +54,33 @@ import org.koin.androidx.compose.viewModel
 import java.util.Locale
 
 private const val TAG = "MainActivity"
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide()
+        //supportActionBar?.hide()
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(Locale.getDefault().language)
         )
         setContent {
             MoonLogTheme(
-                dynamicColor = false
+                dynamicColor = true
             ) {
                 // A surface container using the 'background' color from the theme
                 val moonLogViewModel: MoonLogViewModel by viewModel()
+                val settings = moonLogViewModel.userSettings.collectAsState().value
+                splashScreen.apply {
+                    setKeepOnScreenCondition{
+                        settings !is UiState.LOADING
+                    }
+                }
                 val navController = rememberNavController()
                 moonLogViewModel.downloadUserSettings()
                 var userSettingsState by remember {
                     mutableStateOf(false)
                 }
-                val settings = moonLogViewModel.userSettings.collectAsState().value
                 if(settings is UiState.SUCCESS && !settings.data.username.isNullOrEmpty()){
                     userSettingsState = true
                 }
